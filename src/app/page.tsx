@@ -1,6 +1,6 @@
-import CategoryFilter from '@/components/CategoryFilter';
-import SortDropdown from '@/components/SortDropdown';
-import FeedbackList from '@/components/FeedbackList';
+import CategoryFilter from '@/components/filters/CategoryFilter';
+import SortDropdown from '@/components/feedback/SortDropdown';
+import FeedbackList from '@/components/feedback/FeedbackList';
 
 export default function Home() {
   return (
