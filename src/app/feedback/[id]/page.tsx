@@ -1,14 +1,44 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { useFeedbackStore } from '@/store/feedbackStore';
 import { notFound } from 'next/navigation';
+import { mockFeedbacks } from '@/lib/mockFeedbackData';
 import CommentSection from '@/components/comments/CommentSection';
 
 export default function FeedbackDetail({ params }: { params: { id: string } }) {
   const feedbackId = parseInt(params.id, 10);
-  const feedback = useFeedbackStore((s) =>
-    s.feedbacks.find((f) => f.id === feedbackId)
-  );
+  const feedbacks = useFeedbackStore((s) => s.feedbacks);
+  const setFeedbacks = useFeedbackStore((s) => s.setFeedbacks);
 
-  if (!feedback) return notFound();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    console.log('[useEffect] Component mounted');
+    setMounted(true);
+
+    if (feedbacks.length === 0) {
+      console.log('[useEffect] No feedbacks in store — seeding mock data');
+      setFeedbacks(mockFeedbacks);
+    } else {
+      console.log('[useEffect] Feedbacks already loaded:', feedbacks);
+    }
+  }, [feedbacks, setFeedbacks]);
+
+  if (!mounted) {
+    console.log('[render] Not mounted yet — skipping render');
+    return null;
+  }
+
+  console.log('[render] Looking for feedback ID:', feedbackId);
+  const feedback = feedbacks.find((f) => f.id === feedbackId);
+
+  if (!feedback) {
+    console.warn('[render] Feedback not found! Showing 404.');
+    return notFound();
+  }
+
+  console.log('[render] Feedback found:', feedback);
 
   return (
     <section className='max-w-2xl mx-auto space-y-6'>

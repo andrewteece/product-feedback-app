@@ -1,5 +1,5 @@
-// store/feedbackStore.ts
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { Feedback, Category } from '@/types/feedback';
 
 type SortOption =
@@ -19,22 +19,30 @@ interface FeedbackState {
   setSortOption: (option: SortOption) => void;
 }
 
-export const useFeedbackStore = create<FeedbackState>((set) => ({
-  feedbacks: [],
-  selectedCategory: 'All',
-  sortOption: 'Most Upvotes',
+export const useFeedbackStore = create<FeedbackState>()(
+  persist(
+    (set) => ({
+      feedbacks: [],
+      selectedCategory: 'All',
+      sortOption: 'Most Upvotes',
 
-  setFeedbacks: (feedbacks) => set({ feedbacks }),
-  addFeedback: (newFeedback) =>
-    set((state) => ({ feedbacks: [...state.feedbacks, newFeedback] })),
+      setFeedbacks: (feedbacks) => set({ feedbacks }),
+      addFeedback: (newFeedback) =>
+        set((state) => ({ feedbacks: [...state.feedbacks, newFeedback] })),
 
-  upvoteFeedback: (id) =>
-    set((state) => ({
-      feedbacks: state.feedbacks.map((f) =>
-        f.id === id ? { ...f, upvotes: f.upvotes + 1 } : f
-      ),
-    })),
+      upvoteFeedback: (id) =>
+        set((state) => ({
+          feedbacks: state.feedbacks.map((f) =>
+            f.id === id ? { ...f, upvotes: f.upvotes + 1 } : f
+          ),
+        })),
 
-  setCategory: (category) => set({ selectedCategory: category }),
-  setSortOption: (option) => set({ sortOption: option }),
-}));
+      setCategory: (category) => set({ selectedCategory: category }),
+      setSortOption: (option) => set({ sortOption: option }),
+    }),
+    {
+      name: 'feedback-store', // localStorage key
+      partialize: (state) => ({ feedbacks: state.feedbacks }), // only persist feedbacks
+    }
+  )
+);
