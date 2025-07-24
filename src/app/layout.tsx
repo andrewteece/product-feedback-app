@@ -1,5 +1,5 @@
 // app/layout.tsx
-import './globals.css';
+import '../styles/globals.css';
 import { Inter } from 'next/font/google';
 import Header from '@/components/layout/Header';
 
