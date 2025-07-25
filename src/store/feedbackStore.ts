@@ -1,19 +1,26 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Feedback, Status } from '@/types/feedback';
+import type { Feedback, Status, Category } from '@/types/feedback';
 
 interface FeedbackState {
   feedbacks: Feedback[];
+  selectedCategory: Category | 'All';
+  setSelectedCategory: (category: Category | 'All') => void;
   setFeedbacks: (feedbacks: Feedback[]) => void;
   addFeedback: (feedback: Feedback) => void;
   updateFeedbackStatus: (id: number, newStatus: Status) => void;
   toggleUpvote: (id: number) => void;
   addComment: (feedbackId: number, content: string) => void;
+  addReply: (feedbackId: number, commentId: number, content: string) => void;
 }
 
 export const useFeedbackStore = create<FeedbackState>()(
   subscribeWithSelector((set) => ({
     feedbacks: [],
+
+    selectedCategory: 'All',
+
+    setSelectedCategory: (category) => set({ selectedCategory: category }),
 
     setFeedbacks: (feedbacks) => set({ feedbacks }),
 
@@ -65,11 +72,11 @@ export const useFeedbackStore = create<FeedbackState>()(
             : fb
         ),
       })),
-    addReply: (feedbackId: number, commentId: number, content: string) =>
+
+    addReply: (feedbackId, commentId, content) =>
       set((state) => ({
         feedbacks: state.feedbacks.map((fb) => {
           if (fb.id !== feedbackId) return fb;
-
           return {
             ...fb,
             comments: fb.comments?.map((comment) =>
@@ -97,7 +104,7 @@ export const useFeedbackStore = create<FeedbackState>()(
   }))
 );
 
-// ✅ Persist feedbacks to localStorage on every update
+// ✅ Persist feedbacks to localStorage
 useFeedbackStore.subscribe(
   (state) => state.feedbacks,
   (feedbacks) => {

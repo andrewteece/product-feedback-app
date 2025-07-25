@@ -20,6 +20,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+import { useSearchParams, useRouter } from 'next/navigation';
+
 import { useFeedbackStore } from '@/store/feedbackStore';
 import type { Feedback, Status } from '@/types/feedback';
 import {
@@ -30,7 +32,9 @@ import {
 
 type StatusColumn = Extract<Status, 'planned' | 'in-progress' | 'live'>;
 
-const RoadmapPage = () => {
+const columns: StatusColumn[] = ['planned', 'in-progress', 'live'];
+
+export default function RoadmapPage() {
   const feedbacks = useFeedbackStore((state) => state.feedbacks);
   const updateStatus = useFeedbackStore((state) => state.updateFeedbackStatus);
 
@@ -39,7 +43,16 @@ const RoadmapPage = () => {
     useSensor(KeyboardSensor)
   );
 
-  const columns: StatusColumn[] = ['planned', 'in-progress', 'live'];
+  const router = useRouter();
+  const params = useSearchParams();
+
+  const statusParam = (params.get('status') as StatusColumn) ?? 'planned';
+
+  const handleStatusChange = (newStatus: StatusColumn) => {
+    const newParams = new URLSearchParams(params.toString());
+    newParams.set('status', newStatus);
+    router.replace(`/roadmap?${newParams.toString()}`);
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -74,22 +87,34 @@ const RoadmapPage = () => {
         </Link>
       </div>
 
+      {/* Tab buttons */}
+      <div className='flex gap-4 mb-6 border-b border-[var(--border-card)]'>
+        {columns.map((col) => (
+          <button
+            key={col}
+            onClick={() => handleStatusChange(col)}
+            className={`pb-2 text-sm font-semibold border-b-2 transition ${
+              statusParam === col
+                ? 'border-[var(--btn-primary)] text-[var(--text-primary)]'
+                : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+            }`}
+          >
+            {STATUS_LABELS[col]} (
+            {feedbacks.filter((f) => f.status === col).length})
+          </button>
+        ))}
+      </div>
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-10'>
-          {columns.map((column) => (
-            <DroppableColumn key={column} status={column} items={feedbacks} />
-          ))}
-        </div>
+        <DroppableColumn status={statusParam} items={feedbacks} />
       </DndContext>
     </main>
   );
-};
-
-export default RoadmapPage;
+}
 
 function DroppableColumn({
   status,

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from 'react';
 import { useFeedbackStore } from '@/store/feedbackStore';
-import { mockFeedbacks } from '@/lib/mockFeedbackData';
+import data from '@/lib/data/data.json';
 import FeedbackCard from '@/components/feedback/FeedbackCard';
 
 export default function FeedbackList() {
@@ -11,10 +11,9 @@ export default function FeedbackList() {
   const selectedCategory = useFeedbackStore((s) => s.selectedCategory);
   const sortOption = useFeedbackStore((s) => s.sortOption);
 
-  // Seed mock data only if localStorage is empty
   useEffect(() => {
     if (feedbacks.length === 0) {
-      setFeedbacks(mockFeedbacks);
+      setFeedbacks(data.productRequests);
     }
   }, [feedbacks, setFeedbacks]);
 
