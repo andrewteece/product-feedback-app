@@ -8,6 +8,7 @@ import CommentSection from '@/components/comments/CommentSection';
 
 export default function FeedbackDetail({ params }: { params: { id: string } }) {
   const feedbackId = parseInt(params.id, 10);
+
   const feedbacks = useFeedbackStore((s) => s.feedbacks);
   const setFeedbacks = useFeedbackStore((s) => s.setFeedbacks);
 
@@ -30,7 +31,6 @@ export default function FeedbackDetail({ params }: { params: { id: string } }) {
     return null;
   }
 
-  console.log('[render] Looking for feedback ID:', feedbackId);
   const feedback = feedbacks.find((f) => f.id === feedbackId);
 
   if (!feedback) {
@@ -58,7 +58,10 @@ export default function FeedbackDetail({ params }: { params: { id: string } }) {
         </button>
       </div>
 
-      <CommentSection comments={feedback.comments ?? []} />
+      <CommentSection
+        comments={feedback.comments ?? []}
+        feedbackId={feedback.id}
+      />
     </section>
   );
 }
