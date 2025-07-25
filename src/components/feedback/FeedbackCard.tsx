@@ -5,7 +5,7 @@ import type { Feedback } from '@/types/feedback';
 
 export default function FeedbackCard({ feedback }: { feedback: Feedback }) {
   return (
-    <article className='border border-slate-200 dark:border-slate-700 p-4 rounded-lg shadow-sm hover:shadow transition'>
+    <article className='border border-[var(--border-card)] p-4 rounded-lg shadow-sm hover:shadow transition bg-[var(--bg-card)] text-[var(--text-primary)]'>
       <div className='flex justify-between items-start gap-4'>
         <div>
           <Link href={`/feedback/${feedback.id}`}>
@@ -13,14 +13,14 @@ export default function FeedbackCard({ feedback }: { feedback: Feedback }) {
               {feedback.title}
             </h2>
           </Link>
-          <p className='text-sm text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-[var(--text-muted)]'>
             {feedback.description}
           </p>
-          <span className='inline-block mt-2 text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded'>
+          <span className='inline-block mt-2 text-xs bg-[var(--badge-bg)] px-2 py-1 rounded text-[var(--text-primary)]'>
             {feedback.category}
           </span>
         </div>
-        <button className='min-w-[3rem] px-2 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600'>
+        <button className='min-w-[3rem] px-2 py-1 bg-[var(--btn-primary)] hover:bg-[var(--btn-primary-hover)] text-white rounded text-sm'>
           ▲ {feedback.upvotes}
         </button>
       </div>

@@ -26,22 +26,19 @@ type StatusColumn = 'Planned' | 'In-Progress' | 'Live';
 
 const COLUMN_META: Record<
   StatusColumn,
-  { title: string; description: string; color: string }
+  { title: string; description: string }
 > = {
   Planned: {
     title: 'Planned',
     description: 'Ideas prioritized for research',
-    color: 'bg-orange',
   },
   'In-Progress': {
     title: 'In-Progress',
     description: 'Currently being developed',
-    color: 'bg-magenta',
   },
   Live: {
     title: 'Live',
     description: 'Released features',
-    color: 'bg-lightBlue',
   },
 };
 
@@ -58,7 +55,6 @@ const RoadmapPage = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
     if (!over) return;
 
     const activeId = active.id;
@@ -79,13 +75,19 @@ const RoadmapPage = () => {
       <div key={status}>
         <div className='flex items-center gap-2 mb-1'>
           <span
-            className={`w-2 h-2 rounded-full ${COLUMN_META[status].color}`}
+            className={`w-2 h-2 rounded-full ${
+              status === 'Planned'
+                ? 'bg-[var(--status-planned)]'
+                : status === 'In-Progress'
+                  ? 'bg-[var(--status-inprogress)]'
+                  : 'bg-[var(--status-live)]'
+            }`}
           />
-          <h2 className='text-md font-semibold text-darkBlue'>
+          <h2 className='text-md font-semibold text-[var(--text-primary)]'>
             {COLUMN_META[status].title} ({columnData.length})
           </h2>
         </div>
-        <p className='text-sm text-gray-500 mb-4'>
+        <p className='text-sm text-[var(--text-muted)] mb-4'>
           {COLUMN_META[status].description}
         </p>
 
@@ -104,15 +106,20 @@ const RoadmapPage = () => {
   };
 
   return (
-    <main className='px-4 py-6 sm:px-8 lg:px-16 bg-lightGrey min-h-screen'>
+    <main className='px-4 py-6 sm:px-8 lg:px-16 bg-[var(--bg-page)] min-h-screen'>
       <div className='flex items-center justify-between mb-6'>
-        <Link href='/' className='text-sm font-bold text-blue hover:underline'>
+        <Link
+          href='/'
+          className='text-sm font-bold text-[var(--text-primary)] hover:underline'
+        >
           ← Go Back
         </Link>
-        <h1 className='text-xl font-bold'>Roadmap</h1>
+        <h1 className='text-xl font-bold text-[var(--text-primary)]'>
+          Roadmap
+        </h1>
         <Link
           href='/feedback/new'
-          className='bg-purple text-white px-4 py-2 rounded-md hover:bg-purple-dark transition'
+          className='bg-[var(--btn-primary)] hover:bg-[var(--btn-primary-hover)] text-white px-4 py-2 rounded-md transition'
         >
           + Add Feedback
         </Link>
@@ -133,13 +140,8 @@ const RoadmapPage = () => {
 
 export default RoadmapPage;
 
-// ----------------------
-// 🔧 DraggableCard component
-// ----------------------
-
 const DraggableCard = ({ item }: { item: Feedback }) => {
   const toggleUpvote = useFeedbackStore((state) => state.toggleUpvote);
-
   const {
     attributes,
     listeners,
@@ -159,23 +161,24 @@ const DraggableCard = ({ item }: { item: Feedback }) => {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Link href={`/feedback/${item.id}`}>
         <div
-          className={`bg-white dark:bg-darkBlue p-7 rounded-lg border-t-4 shadow-md hover:ring-2 ring-purple transition-transform hover:-translate-y-1 ${
+          className={`bg-[var(--bg-card)] p-7 rounded-lg border-t-4 shadow-md hover:ring-2 ring-[var(--btn-primary)] transition-transform hover:-translate-y-1 ${
             item.status === 'Planned'
-              ? 'border-orange'
+              ? 'border-[var(--status-planned)]'
               : item.status === 'In-Progress'
-                ? 'border-magenta'
-                : 'border-lightBlue'
+                ? 'border-[var(--status-inprogress)]'
+                : 'border-[var(--status-live)]'
           }`}
         >
-          <p className='text-sm text-gray-500 capitalize mb-2'>{item.status}</p>
-          <h3 className='text-md font-bold text-darkBlue dark:text-white'>
+          <p className='text-sm text-[var(--text-muted)] capitalize mb-2'>
+            {item.status}
+          </p>
+          <h3 className='text-md font-bold text-[var(--text-primary)]'>
             {item.title}
           </h3>
-          <p className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
+          <p className='text-sm text-[var(--text-muted)] mb-4'>
             {item.description}
           </p>
-
-          <span className='inline-block bg-lightGrey dark:bg-indigo-900 text-darkBlue dark:text-white text-xs font-semibold px-3 py-1 rounded-md mb-4'>
+          <span className='inline-block bg-[var(--badge-bg)] text-[var(--text-primary)] text-xs font-semibold px-3 py-1 rounded-md mb-4'>
             {item.category}
           </span>
 
@@ -187,8 +190,8 @@ const DraggableCard = ({ item }: { item: Feedback }) => {
               }}
               className={`flex items-center gap-1 px-3 py-1 rounded-lg transition font-semibold text-sm ${
                 item.upvoted
-                  ? 'bg-purple text-white'
-                  : 'bg-lightGrey dark:bg-indigo-900 text-darkBlue dark:text-white'
+                  ? 'bg-[var(--btn-primary)] text-white'
+                  : 'bg-[var(--badge-bg)] text-[var(--text-primary)]'
               }`}
             >
               <Image
@@ -207,7 +210,7 @@ const DraggableCard = ({ item }: { item: Feedback }) => {
                 width={16}
                 height={16}
               />
-              <span className='text-sm font-semibold text-darkBlue dark:text-white'>
+              <span className='text-sm font-semibold text-[var(--text-primary)]'>
                 {item.comments?.length ?? 0}
               </span>
             </div>

@@ -19,6 +19,10 @@
 
     /* Border */
     --border-header: #e5e5e5;
+    --border-card: #e5eaf2;
+
+    /* Badge */
+    --badge-bg: #f2f4ff;
   }
 
   :root.dark {
@@ -41,5 +45,9 @@
 
     /* Border */
     --border-header: #3b3b3b;
+    --border-card: #3b3f51;
+
+    /* Badge */
+    --badge-bg: #2c2f3f;
   }
 }
