@@ -9,7 +9,7 @@ type SortOption =
   | 'Least Comments';
 
 interface FeedbackState {
-  feedbacks: Feedback[];
+  feedback: Feedback[];
   selectedCategory: Category | 'All';
   sortOption: SortOption;
   setFeedbacks: (feedbacks: Feedback[]) => void;
@@ -23,20 +23,20 @@ interface FeedbackState {
 export const useFeedbackStore = create<FeedbackState>()(
   persist(
     (set) => ({
-      feedbacks: [],
+      feedback: [],
       selectedCategory: 'All',
       sortOption: 'Most Upvotes',
 
-      setFeedbacks: (feedbacks) => set({ feedbacks }),
+      setFeedbacks: (feedback) => set({ feedback }),
 
       addFeedback: (newFeedback) =>
         set((state) => ({
-          feedbacks: [...state.feedbacks, newFeedback],
+          feedback: [...state.feedback, newFeedback],
         })),
 
       upvoteFeedback: (id) =>
         set((state) => ({
-          feedbacks: state.feedbacks.map((f) =>
+          feedback: state.feedback.map((f) =>
             f.id === id ? { ...f, upvotes: f.upvotes + 1 } : f
           ),
         })),
@@ -46,7 +46,7 @@ export const useFeedbackStore = create<FeedbackState>()(
 
       addComment: (feedbackId, comment) =>
         set((state) => ({
-          feedbacks: state.feedbacks.map((f) =>
+          feedback: state.feedback.map((f) =>
             f.id === feedbackId
               ? {
                   ...f,
@@ -58,7 +58,7 @@ export const useFeedbackStore = create<FeedbackState>()(
     }),
     {
       name: 'feedback-store',
-      partialize: (state) => ({ feedbacks: state.feedbacks }),
+      partialize: (state) => ({ feedbacks: state.feedback }),
     }
   )
 );
