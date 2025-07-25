@@ -22,70 +22,83 @@ const RoadmapPage = () => {
   const renderColumn = (
     title: string,
     description: string,
-    items: typeof feedbacks
+    items: typeof feedbacks,
+    accentColor: string
   ) => (
     <section>
-      <h2 className='text-md font-semibold text-darkBlue mb-1'>
-        {title} ({items.length})
-      </h2>
+      <div className={`flex items-center gap-2 mb-1`}>
+        <span
+          className={`w-2 h-2 rounded-full ${accentColor}`}
+          aria-hidden='true'
+        ></span>
+        <h2 className='text-md font-semibold text-darkBlue'>
+          {title} ({items.length})
+        </h2>
+      </div>
       <p className='text-sm text-gray-500 mb-4'>{description}</p>
 
-      <div className='space-y-4'>
+      <div>
         {items.map((item) => (
-          <div
-            key={item.id}
-            className={`bg-white dark:bg-darkBlue p-6 rounded-lg border-t-4 shadow-sm ${
-              item.status === 'Planned'
-                ? 'border-orange'
-                : item.status === 'In-Progress'
-                  ? 'border-magenta'
-                  : 'border-lightBlue'
-            }`}
-          >
-            <p className='text-sm text-gray-500 capitalize mb-2'>
-              {item.status}
-            </p>
-            <h3 className='text-md font-bold text-darkBlue dark:text-white'>
-              {item.title}
-            </h3>
-            <p className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
-              {item.description}
-            </p>
-
-            <span className='inline-block bg-lightGrey dark:bg-indigo-900 text-darkBlue dark:text-white text-xs font-semibold px-3 py-1 rounded-md mb-4'>
-              {item.category}
-            </span>
-
-            <div className='flex justify-between items-center'>
-              <button
-                onClick={() => toggleUpvote(item.id)}
-                className={`flex items-center gap-1 px-3 py-1 rounded-lg transition font-semibold text-sm ${
-                  item.upvoted
-                    ? 'bg-purple text-white'
-                    : 'bg-lightGrey dark:bg-indigo-900 text-darkBlue dark:text-white'
+          <div key={item.id} className='mb-6'>
+            <Link href={`/feedback/${item.id}`}>
+              <div
+                className={`bg-white dark:bg-darkBlue p-7 rounded-lg border-t-4 shadow-md hover:ring-2 ring-purple transition-transform hover:-translate-y-1 ${
+                  item.status === 'Planned'
+                    ? 'border-orange'
+                    : item.status === 'In-Progress'
+                      ? 'border-magenta'
+                      : 'border-lightBlue'
                 }`}
               >
-                <Image
-                  src='/assets/icons/icon-arrow-up.svg'
-                  alt='Upvote'
-                  width={10}
-                  height={10}
-                />
-                {item.upvotes}
-              </button>
+                <p className='text-sm text-gray-500 capitalize mb-2'>
+                  {item.status}
+                </p>
+                <h3 className='text-md font-bold text-darkBlue dark:text-white'>
+                  {item.title}
+                </h3>
+                <p className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
+                  {item.description}
+                </p>
 
-              <div className='flex items-center gap-1'>
-                <Image
-                  src='/assets/icons/icon-comments.svg'
-                  alt='Comments'
-                  width={16}
-                  height={16}
-                />
-                <span className='text-sm font-semibold text-darkBlue dark:text-white'>
-                  {item.comments?.length ?? 0}
+                <span className='inline-block bg-lightGrey dark:bg-indigo-900 text-darkBlue dark:text-white text-xs font-semibold px-3 py-1 rounded-md mb-4'>
+                  {item.category}
                 </span>
+
+                <div className='flex justify-between items-center'>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleUpvote(item.id);
+                    }}
+                    className={`flex items-center gap-1 px-3 py-1 rounded-lg transition font-semibold text-sm ${
+                      item.upvoted
+                        ? 'bg-purple text-white'
+                        : 'bg-lightGrey dark:bg-indigo-900 text-darkBlue dark:text-white'
+                    }`}
+                  >
+                    <Image
+                      src='/assets/icons/icon-arrow-up.svg'
+                      alt='Upvote'
+                      width={10}
+                      height={10}
+                    />
+                    {item.upvotes}
+                  </button>
+
+                  <div className='flex items-center gap-1'>
+                    <Image
+                      src='/assets/icons/icon-comments.svg'
+                      alt='Comments'
+                      width={16}
+                      height={16}
+                    />
+                    <span className='text-sm font-semibold text-darkBlue dark:text-white'>
+                      {item.comments?.length ?? 0}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         ))}
       </div>
@@ -107,10 +120,20 @@ const RoadmapPage = () => {
         </Link>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-        {renderColumn('Planned', 'Ideas prioritized for research', planned)}
-        {renderColumn('In-Progress', 'Currently being developed', inProgress)}
-        {renderColumn('Live', 'Released features', live)}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-10'>
+        {renderColumn(
+          'Planned',
+          'Ideas prioritized for research',
+          planned,
+          'bg-orange'
+        )}
+        {renderColumn(
+          'In-Progress',
+          'Currently being developed',
+          inProgress,
+          'bg-magenta'
+        )}
+        {renderColumn('Live', 'Released features', live, 'bg-lightBlue')}
       </div>
     </main>
   );
