@@ -8,6 +8,7 @@ interface FeedbackState {
   addFeedback: (feedback: Feedback) => void;
   updateFeedbackStatus: (id: number, newStatus: Status) => void;
   toggleUpvote: (id: number) => void;
+  addComment: (feedbackId: number, content: string) => void;
 }
 
 export const useFeedbackStore = create<FeedbackState>()(
@@ -36,6 +37,30 @@ export const useFeedbackStore = create<FeedbackState>()(
                 ...fb,
                 upvoted: !fb.upvoted,
                 upvotes: fb.upvoted ? fb.upvotes - 1 : fb.upvotes + 1,
+              }
+            : fb
+        ),
+      })),
+
+    addComment: (feedbackId, content) =>
+      set((state) => ({
+        feedbacks: state.feedbacks.map((fb) =>
+          fb.id === feedbackId
+            ? {
+                ...fb,
+                comments: [
+                  ...(fb.comments ?? []),
+                  {
+                    id: Date.now(),
+                    content,
+                    user: {
+                      name: 'Guest User',
+                      username: 'guest',
+                      image: '/assets/user-images/image-default.jpg',
+                    },
+                    replies: [],
+                  },
+                ],
               }
             : fb
         ),

@@ -1,0 +1,51 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { useFeedbackStore } from '@/store/feedbackStore';
+import type { Category } from '@/types/feedback';
+import type { SortOption } from '@/components/feedback/SortDropdown';
+
+import CategoryFilter from '@/components/feedback/CategoryFilter';
+import SortDropdown from '@/components/feedback/SortDropdown';
+import SuggestionList from '@/components/feedback/SuggestionList';
+
+export default function SuggestionsPage() {
+  const feedbacks = useFeedbackStore((s) => s.feedbacks);
+  const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote);
+
+  const [selectedCategory, setSelectedCategory] = useState<Category | 'all'>(
+    'all'
+  );
+  const [sortOption, setSortOption] = useState<SortOption>('Most Upvotes');
+
+  return (
+    <main className='px-4 py-6 sm:px-8 lg:px-16 bg-[var(--bg-page)] min-h-screen text-[var(--text-primary)]'>
+      <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6'>
+        <h1 className='text-2xl font-bold'>Suggestions</h1>
+
+        <div className='flex flex-col sm:flex-row sm:items-center gap-4'>
+          <SortDropdown value={sortOption} onChange={setSortOption} />
+          <CategoryFilter
+            selected={selectedCategory}
+            onChange={setSelectedCategory}
+          />
+        </div>
+
+        <Link
+          href='/feedback/new'
+          className='bg-[var(--btn-primary)] hover:bg-[var(--btn-primary-hover)] text-white px-4 py-2 rounded-md transition text-sm text-center'
+        >
+          + Add Feedback
+        </Link>
+      </div>
+
+      <SuggestionList
+        feedbacks={feedbacks}
+        category={selectedCategory}
+        sort={sortOption}
+        onUpvote={toggleUpvote}
+      />
+    </main>
+  );
+}

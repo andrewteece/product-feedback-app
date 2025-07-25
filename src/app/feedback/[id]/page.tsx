@@ -11,30 +11,42 @@ export default function FeedbackDetailPage() {
   const feedback = useFeedbackStore((state) =>
     state.feedbacks.find((f) => f.id === id)
   );
+  const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote);
 
-  if (!feedback) {
-    return notFound();
-  }
+  if (Number.isNaN(id) || !feedback) return notFound();
 
   return (
     <section className='max-w-2xl mx-auto space-y-6 text-[var(--text-primary)]'>
-      <div className='border border-[var(--border-card)] p-4 rounded shadow bg-[var(--bg-card)]'>
-        <h1 className='text-xl font-bold'>{feedback.title}</h1>
-        <p className='text-[var(--text-muted)]'>{feedback.description}</p>
+      <article
+        className='border border-[var(--border-card)] p-4 rounded shadow bg-[var(--bg-card)]'
+        aria-labelledby={`feedback-title-${feedback.id}`}
+      >
+        <h1 id={`feedback-title-${feedback.id}`} className='text-xl font-bold'>
+          {feedback.title}
+        </h1>
+        <p className='text-[var(--text-muted)] mt-1'>{feedback.description}</p>
 
-        <div className='flex items-center gap-4 mt-2'>
-          <span className='bg-[var(--badge-bg)] px-2 py-1 rounded text-sm'>
-            Category: {feedback.category}
+        <div className='flex items-center gap-4 mt-3'>
+          <span className='bg-[var(--badge-bg)] px-2 py-1 rounded text-sm capitalize'>
+            {feedback.category}
           </span>
-          <span className='text-sm text-[var(--btn-primary)]'>
+          <span className='text-sm text-[var(--btn-primary)] capitalize'>
             {feedback.status}
           </span>
         </div>
 
-        <button className='mt-4 px-4 py-2 bg-[var(--btn-primary)] hover:bg-[var(--btn-primary-hover)] text-white rounded'>
+        <button
+          onClick={() => toggleUpvote(feedback.id)}
+          className={`mt-4 px-4 py-2 rounded transition font-semibold text-sm ${
+            feedback.upvoted
+              ? 'bg-[var(--btn-primary)] text-white'
+              : 'bg-[var(--badge-bg)] text-[var(--text-primary)]'
+          }`}
+          aria-label={`Upvote ${feedback.title}`}
+        >
           ▲ {feedback.upvotes}
         </button>
-      </div>
+      </article>
 
       <CommentSection
         comments={feedback.comments ?? []}
