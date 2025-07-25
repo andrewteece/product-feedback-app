@@ -1,23 +1,17 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useFeedbackStore } from '@/store/feedbackStore';
-import type { Category } from '@/types/feedback';
-import type { SortOption } from '@/components/feedback/SortDropdown';
-
+import SuggestionList from '@/components/feedback/SuggestionList';
 import CategoryFilter from '@/components/feedback/CategoryFilter';
 import SortDropdown from '@/components/feedback/SortDropdown';
-import SuggestionList from '@/components/feedback/SuggestionList';
+import { useSuggestionsFilters } from '@/hooks/useSuggestionsFilters';
 
 export default function SuggestionsPage() {
   const feedbacks = useFeedbackStore((s) => s.feedbacks);
   const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote);
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | 'all'>(
-    'all'
-  );
-  const [sortOption, setSortOption] = useState<SortOption>('Most Upvotes');
+  const { category, sort, updateFilters } = useSuggestionsFilters();
 
   return (
     <main className='px-4 py-6 sm:px-8 lg:px-16 bg-[var(--bg-page)] min-h-screen text-[var(--text-primary)]'>
@@ -25,10 +19,13 @@ export default function SuggestionsPage() {
         <h1 className='text-2xl font-bold'>Suggestions</h1>
 
         <div className='flex flex-col sm:flex-row sm:items-center gap-4'>
-          <SortDropdown value={sortOption} onChange={setSortOption} />
+          <SortDropdown
+            value={sort}
+            onChange={(val) => updateFilters({ sort: val })}
+          />
           <CategoryFilter
-            selected={selectedCategory}
-            onChange={setSelectedCategory}
+            selected={category}
+            onChange={(val) => updateFilters({ category: val })}
           />
         </div>
 
@@ -42,8 +39,8 @@ export default function SuggestionsPage() {
 
       <SuggestionList
         feedbacks={feedbacks}
-        category={selectedCategory}
-        sort={sortOption}
+        category={category}
+        sort={sort}
         onUpvote={toggleUpvote}
       />
     </main>

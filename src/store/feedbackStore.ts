@@ -65,6 +65,35 @@ export const useFeedbackStore = create<FeedbackState>()(
             : fb
         ),
       })),
+    addReply: (feedbackId: number, commentId: number, content: string) =>
+      set((state) => ({
+        feedbacks: state.feedbacks.map((fb) => {
+          if (fb.id !== feedbackId) return fb;
+
+          return {
+            ...fb,
+            comments: fb.comments?.map((comment) =>
+              comment.id === commentId
+                ? {
+                    ...comment,
+                    replies: [
+                      ...(comment.replies ?? []),
+                      {
+                        id: Date.now(),
+                        content,
+                        user: {
+                          name: 'Guest User',
+                          username: 'guest',
+                          image: '/assets/user-images/image-default.jpg',
+                        },
+                      },
+                    ],
+                  }
+                : comment
+            ),
+          };
+        }),
+      })),
   }))
 );
 
