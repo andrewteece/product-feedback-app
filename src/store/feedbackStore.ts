@@ -1,64 +1,64 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type { Feedback, Category, Comment } from '@/types/feedback';
 
-type SortOption =
-  | 'Most Upvotes'
-  | 'Least Upvotes'
-  | 'Most Comments'
-  | 'Least Comments';
+// Types
+export type Status = 'Suggestion' | 'Planned' | 'In-Progress' | 'Live';
 
-interface FeedbackState {
-  feedback: Feedback[];
-  selectedCategory: Category | 'All';
-  sortOption: SortOption;
-  setFeedbacks: (feedbacks: Feedback[]) => void;
-  addFeedback: (newFeedback: Feedback) => void;
-  upvoteFeedback: (id: number) => void;
-  setCategory: (category: Category | 'All') => void;
-  setSortOption: (option: SortOption) => void;
-  addComment: (feedbackId: number, comment: Comment) => void;
-}
+export type Feedback = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  status: Status;
+  upvotes: number;
+  upvoted?: boolean;
+  comments?: {
+    id: number;
+    content: string;
+    user: {
+      image: string;
+      name: string;
+      username: string;
+    };
+    replies?: {
+      content: string;
+      replyingTo: string;
+      user: {
+        image: string;
+        name: string;
+        username: string;
+      };
+    }[];
+  }[];
+};
 
-export const useFeedbackStore = create<FeedbackState>()(
-  persist(
-    (set) => ({
-      feedback: [],
-      selectedCategory: 'All',
-      sortOption: 'Most Upvotes',
+export type FeedbackState = {
+  feedbacks: Feedback[];
+  setFeedbacks: (data: Feedback[]) => void;
+  toggleUpvote: (id: number) => void;
+};
 
-      setFeedbacks: (feedback) => set({ feedback }),
+export const useFeedbackStore = create<FeedbackState>((set) => ({
+  feedbacks: [],
 
-      addFeedback: (newFeedback) =>
-        set((state) => ({
-          feedback: [...state.feedback, newFeedback],
-        })),
-
-      upvoteFeedback: (id) =>
-        set((state) => ({
-          feedback: state.feedback.map((f) =>
-            f.id === id ? { ...f, upvotes: f.upvotes + 1 } : f
-          ),
-        })),
-
-      setCategory: (category) => set({ selectedCategory: category }),
-      setSortOption: (option) => set({ sortOption: option }),
-
-      addComment: (feedbackId, comment) =>
-        set((state) => ({
-          feedback: state.feedback.map((f) =>
-            f.id === feedbackId
-              ? {
-                  ...f,
-                  comments: f.comments ? [...f.comments, comment] : [comment],
-                }
-              : f
-          ),
-        })),
+  setFeedbacks: (data) =>
+    set({
+      feedbacks: data.map((item) => ({
+        ...item,
+        upvoted: item.upvoted ?? false,
+      })),
     }),
-    {
-      name: 'feedback-store',
-      partialize: (state) => ({ feedbacks: state.feedback }),
-    }
-  )
-);
+
+  toggleUpvote: (id) =>
+    set((state) => {
+      const updated = state.feedbacks.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              upvotes: item.upvoted ? item.upvotes - 1 : item.upvotes + 1,
+              upvoted: !item.upvoted,
+            }
+          : item
+      );
+      return { feedbacks: updated };
+    }),
+}));

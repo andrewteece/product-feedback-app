@@ -1,27 +1,28 @@
 'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { useFeedbackStore } from '@/store/feedbackStore';
-import type { Status } from '@/types/feedback';
 import Image from 'next/image';
+import { useFeedbackStore } from '@/store/feedbackStore';
 
 const RoadmapPage = () => {
-  const feedback = useFeedbackStore((state) => state.feedback);
+  const feedbacks = useFeedbackStore((state) => state.feedbacks);
+  const toggleUpvote = useFeedbackStore((state) => state.toggleUpvote);
 
-  const planned = feedback
-    .filter((f) => f.status === ('Planned' as Status))
+  const planned = feedbacks
+    .filter((f) => f.status === 'Planned')
     .sort((a, b) => b.upvotes - a.upvotes);
-  const inProgress = feedback
-    .filter((f) => f.status === ('In-Progress' as Status))
+  const inProgress = feedbacks
+    .filter((f) => f.status === 'In-Progress')
     .sort((a, b) => b.upvotes - a.upvotes);
-  const live = feedback
-    .filter((f) => f.status === ('Live' as Status))
+  const live = feedbacks
+    .filter((f) => f.status === 'Live')
     .sort((a, b) => b.upvotes - a.upvotes);
 
   const renderColumn = (
     title: string,
     description: string,
-    items: typeof feedback
+    items: typeof feedbacks
   ) => (
     <section>
       <h2 className='text-md font-semibold text-darkBlue mb-1'>
@@ -56,7 +57,14 @@ const RoadmapPage = () => {
             </span>
 
             <div className='flex justify-between items-center'>
-              <button className='flex items-center gap-1 bg-lightGrey dark:bg-indigo-900 text-sm text-darkBlue dark:text-white font-semibold px-3 py-1 rounded-lg hover:bg-blue-100 transition'>
+              <button
+                onClick={() => toggleUpvote(item.id)}
+                className={`flex items-center gap-1 px-3 py-1 rounded-lg transition font-semibold text-sm ${
+                  item.upvoted
+                    ? 'bg-purple text-white'
+                    : 'bg-lightGrey dark:bg-indigo-900 text-darkBlue dark:text-white'
+                }`}
+              >
                 <Image
                   src='/assets/icons/icon-arrow-up.svg'
                   alt='Upvote'

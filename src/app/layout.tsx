@@ -2,6 +2,7 @@
 import '../styles/globals.css';
 import { Inter } from 'next/font/google';
 import Header from '@/components/layout/Header';
+import { AppProvider } from '@/components/providers/AppProvider'; // ✅ Add this import
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,8 +22,10 @@ export default function RootLayout({
       className='bg-white text-slate-900 dark:bg-slate-900 dark:text-white'
     >
       <body className={`${inter.className} min-h-screen`}>
-        <Header />
-        <main className='max-w-3xl mx-auto px-4 py-8'>{children}</main>
+        <AppProvider>
+          <Header />
+          <main className='max-w-3xl mx-auto px-4 py-8'>{children}</main>
+        </AppProvider>
       </body>
     </html>
   );
