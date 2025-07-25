@@ -3,16 +3,36 @@
 import { useEffect } from 'react';
 import { useFeedbackStore } from '@/store/feedbackStore';
 import rawData from '@/lib/data/data.json';
-import type { Status } from '@/store/feedbackStore';
+import type { Status, Category, Feedback } from '@/types/feedback';
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const setFeedbacks = useFeedbackStore((state) => state.setFeedbacks);
 
   useEffect(() => {
-    console.log(
-      'RAW STATUS VALUES:',
-      rawData.productRequests.map((f) => f.status)
-    );
+    type RawUser = {
+      image: string;
+      name: string;
+      username: string;
+    };
+
+    type RawFeedback = {
+      id: number;
+      title: string;
+      description: string;
+      category: string;
+      status: string;
+      upvotes: number;
+      comments?: {
+        id: number;
+        content: string;
+        user: RawUser;
+        replies?: {
+          content: string;
+          replyingTo: string;
+          user: RawUser;
+        }[];
+      }[];
+    };
 
     const normalizeStatus = (status: string): Status => {
       const normalized = status.trim().toLowerCase();
@@ -31,38 +51,36 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    type RawUser = {
-      image: string;
-      name: string;
-      username: string;
-    };
-
     const normalizeUser = (user: RawUser) => ({
       name: user.name,
       username: user.username,
-      image: user.image, // ✅ image → avatarUrl
+      image: user.image,
     });
 
-    const loaded = rawData.productRequests.map((item) => ({
-      ...item,
-      status: normalizeStatus(item.status),
-      upvoted: false,
-      comments: item.comments?.map((comment) => ({
-        ...comment,
-        user: normalizeUser(comment.user),
-        replies: comment.replies?.map((reply) => ({
-          ...reply,
-          user: normalizeUser(reply.user),
+    const loaded: Feedback[] = (rawData.productRequests as RawFeedback[]).map(
+      (item) => ({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        category: item.category as Category,
+        status: normalizeStatus(item.status),
+        upvotes: item.upvotes,
+        upvoted: false,
+        comments: item.comments?.map((comment) => ({
+          id: comment.id,
+          content: comment.content,
+          user: normalizeUser(comment.user),
+          replies: comment.replies?.map((reply) => ({
+            content: reply.content,
+            replyingTo: reply.replyingTo,
+            user: normalizeUser(reply.user),
+          })),
         })),
-      })),
-    }));
-
-    console.log(
-      '✅ NORMALIZED STATUS VALUES:',
-      loaded.map((f) => f.status)
+      })
     );
+
     setFeedbacks(loaded);
   }, [setFeedbacks]);
 
-  return <>{children}</>; // ✅ Don't forget to return children!
+  return <>{children}</>;
 };

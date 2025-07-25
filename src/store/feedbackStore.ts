@@ -1,46 +1,17 @@
 import { create } from 'zustand';
-
-// Types
-export type Status = 'Suggestion' | 'Planned' | 'In-Progress' | 'Live';
-
-export type Feedback = {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  status: Status;
-  upvotes: number;
-  upvoted?: boolean;
-  comments?: {
-    id: number;
-    content: string;
-    user: {
-      image: string;
-      name: string;
-      username: string;
-    };
-    replies?: {
-      content: string;
-      replyingTo: string;
-      user: {
-        image: string;
-        name: string;
-        username: string;
-      };
-    }[];
-  }[];
-};
+import type { Feedback, Status } from '@/types/feedback';
 
 export type FeedbackState = {
   feedbacks: Feedback[];
   setFeedbacks: (data: Feedback[]) => void;
   toggleUpvote: (id: number) => void;
+  updateFeedbackStatus: (id: number, newStatus: Status) => void;
 };
 
 export const useFeedbackStore = create<FeedbackState>((set) => ({
   feedbacks: [],
 
-  setFeedbacks: (data) =>
+  setFeedbacks: (data: Feedback[]) =>
     set({
       feedbacks: data.map((item) => ({
         ...item,
@@ -48,7 +19,7 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
       })),
     }),
 
-  toggleUpvote: (id) =>
+  toggleUpvote: (id: number) =>
     set((state) => {
       const updated = state.feedbacks.map((item) =>
         item.id === id
@@ -61,4 +32,11 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
       );
       return { feedbacks: updated };
     }),
+
+  updateFeedbackStatus: (id: number, newStatus: Status) =>
+    set((state) => ({
+      feedbacks: state.feedbacks.map((item) =>
+        item.id === id ? { ...item, status: newStatus } : item
+      ),
+    })),
 }));

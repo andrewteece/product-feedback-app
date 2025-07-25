@@ -20,5 +20,6 @@ export interface Feedback {
   category: Category;
   status: Status;
   upvotes: number;
+  upvoted?: boolean;
   comments?: Comment[];
 }

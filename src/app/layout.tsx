@@ -1,8 +1,7 @@
-// app/layout.tsx
 import '../styles/globals.css';
 import { Inter } from 'next/font/google';
 import Header from '@/components/layout/Header';
-import { AppProvider } from '@/components/providers/AppProvider'; // ✅ Add this import
+import { AppProvider } from '@/components/providers/AppProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,10 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang='en'
-      className='bg-white text-slate-900 dark:bg-slate-900 dark:text-white'
-    >
+    <html lang='en' className='bg-[var(--bg-page)] text-[var(--text-primary)]'>
       <body className={`${inter.className} min-h-screen`}>
         <AppProvider>
           <Header />

@@ -3,20 +3,28 @@
 import { useEffect, useState } from 'react';
 
 export default function ThemeToggle() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const isDark = localStorage.getItem('theme') === 'dark';
+    const saved = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+    const isDark = saved === 'dark' || (!saved && systemPrefersDark);
+
     setDarkMode(isDark);
     document.documentElement.classList.toggle('dark', isDark);
   }, []);
 
   const toggleTheme = () => {
+    if (darkMode === null) return;
     const newTheme = !darkMode;
     setDarkMode(newTheme);
     localStorage.setItem('theme', newTheme ? 'dark' : 'light');
     document.documentElement.classList.toggle('dark', newTheme);
   };
+
+  if (darkMode === null) return null; // avoids flicker
 
   return (
     <button

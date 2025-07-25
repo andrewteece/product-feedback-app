@@ -1,0 +1,45 @@
+@layer base {
+  :root {
+    /* Text */
+    --text-primary: #3a4374;
+    --text-muted: #647196;
+
+    /* Backgrounds */
+    --bg-page: #f7f8fd;
+    --bg-card: #ffffff;
+
+    /* Buttons */
+    --btn-primary: #4661e6;
+    --btn-primary-hover: #ad1fea;
+
+    /* Status tags */
+    --status-planned: #f49f85;
+    --status-inprogress: #ad1fea;
+    --status-live: #62bcfa;
+
+    /* Border */
+    --border-header: #e5e5e5;
+  }
+
+  :root.dark {
+    /* Text */
+    --text-primary: #ffffff;
+    --text-muted: #cdd2ee;
+
+    /* Backgrounds */
+    --bg-page: #121721;
+    --bg-card: #1f2a38;
+
+    /* Buttons */
+    --btn-primary: #ad1fea;
+    --btn-primary-hover: #c75af6;
+
+    /* Status tags */
+    --status-planned: #f49f85;
+    --status-inprogress: #ad1fea;
+    --status-live: #62bcfa;
+
+    /* Border */
+    --border-header: #3b3b3b;
+  }
+}
