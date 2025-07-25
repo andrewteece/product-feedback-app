@@ -1,42 +1,41 @@
 import { create } from 'zustand';
 import type { Feedback, Status } from '@/types/feedback';
 
-export type FeedbackState = {
+interface FeedbackState {
   feedbacks: Feedback[];
-  setFeedbacks: (data: Feedback[]) => void;
-  toggleUpvote: (id: number) => void;
+  setFeedbacks: (feedbacks: Feedback[]) => void;
+  addFeedback: (feedback: Feedback) => void;
   updateFeedbackStatus: (id: number, newStatus: Status) => void;
-};
+  toggleUpvote: (id: number) => void;
+}
 
 export const useFeedbackStore = create<FeedbackState>((set) => ({
   feedbacks: [],
 
-  setFeedbacks: (data: Feedback[]) =>
-    set({
-      feedbacks: data.map((item) => ({
-        ...item,
-        upvoted: item.upvoted ?? false,
-      })),
-    }),
+  setFeedbacks: (feedbacks) => set({ feedbacks }),
 
-  toggleUpvote: (id: number) =>
-    set((state) => {
-      const updated = state.feedbacks.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              upvotes: item.upvoted ? item.upvotes - 1 : item.upvotes + 1,
-              upvoted: !item.upvoted,
-            }
-          : item
-      );
-      return { feedbacks: updated };
-    }),
-
-  updateFeedbackStatus: (id: number, newStatus: Status) =>
+  addFeedback: (feedback) =>
     set((state) => ({
-      feedbacks: state.feedbacks.map((item) =>
-        item.id === id ? { ...item, status: newStatus } : item
+      feedbacks: [...state.feedbacks, feedback],
+    })),
+
+  updateFeedbackStatus: (id, newStatus) =>
+    set((state) => ({
+      feedbacks: state.feedbacks.map((fb) =>
+        fb.id === id ? { ...fb, status: newStatus } : fb
+      ),
+    })),
+
+  toggleUpvote: (id) =>
+    set((state) => ({
+      feedbacks: state.feedbacks.map((fb) =>
+        fb.id === id
+          ? {
+              ...fb,
+              upvoted: !fb.upvoted,
+              upvotes: fb.upvoted ? fb.upvotes - 1 : fb.upvotes + 1,
+            }
+          : fb
       ),
     })),
 }));

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFeedbackStore } from '@/store/feedbackStore';
-import type { Category } from '@/types/feedback';
+import { Category, Status } from '@/types/feedback';
 import { useRouter } from 'next/navigation';
 
 const categories: Category[] = ['UI', 'UX', 'Enhancement', 'Bug', 'Feature'];
@@ -21,6 +21,7 @@ export default function FeedbackForm() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -32,34 +33,45 @@ export default function FeedbackForm() {
   const onSubmit = (data: FormData) => {
     const newFeedback = {
       id: Date.now(),
-      status: 'Suggestion',
+      status: Status.Suggestion,
       upvotes: 0,
       comments: [],
+      upvoted: false,
       ...data,
     };
     addFeedback(newFeedback);
+    reset();
     router.push('/');
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className='space-y-6 text-[var(--text-primary)]'
+    >
       <div>
-        <label className='block font-medium'>Title</label>
+        <label htmlFor='title' className='block font-medium mb-1'>
+          Title
+        </label>
         <input
+          id='title'
           {...register('title')}
-          className='w-full border rounded px-3 py-2'
+          className='w-full border border-[var(--border-card)] rounded px-3 py-2 bg-[var(--bg-card)] text-[var(--text-primary)]'
           placeholder='Add a short, descriptive title'
         />
         {errors.title && (
-          <p className='text-sm text-red-500'>{errors.title.message}</p>
+          <p className='text-sm text-red-500 mt-1'>{errors.title.message}</p>
         )}
       </div>
 
       <div>
-        <label className='block font-medium'>Category</label>
+        <label htmlFor='category' className='block font-medium mb-1'>
+          Category
+        </label>
         <select
+          id='category'
           {...register('category')}
-          className='w-full border rounded px-3 py-2'
+          className='w-full border border-[var(--border-card)] rounded px-3 py-2 bg-[var(--bg-card)] text-[var(--text-primary)]'
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -68,26 +80,31 @@ export default function FeedbackForm() {
           ))}
         </select>
         {errors.category && (
-          <p className='text-sm text-red-500'>{errors.category.message}</p>
+          <p className='text-sm text-red-500 mt-1'>{errors.category.message}</p>
         )}
       </div>
 
       <div>
-        <label className='block font-medium'>Description</label>
+        <label htmlFor='description' className='block font-medium mb-1'>
+          Description
+        </label>
         <textarea
+          id='description'
           {...register('description')}
           rows={5}
-          className='w-full border rounded px-3 py-2'
+          className='w-full border border-[var(--border-card)] rounded px-3 py-2 bg-[var(--bg-card)] text-[var(--text-primary)]'
           placeholder='Include any specific comments on what should be improved, added, etc.'
         />
         {errors.description && (
-          <p className='text-sm text-red-500'>{errors.description.message}</p>
+          <p className='text-sm text-red-500 mt-1'>
+            {errors.description.message}
+          </p>
         )}
       </div>
 
       <button
         type='submit'
-        className='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+        className='bg-[var(--btn-primary)] hover:bg-[var(--btn-primary-hover)] text-white px-6 py-2 rounded-md transition'
       >
         Submit Feedback
       </button>
