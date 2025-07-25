@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useFeedbackStore } from '@/store/feedbackStore';
-import type { Feedback, Status, Category, Comment } from '@/types/feedback';
+import { Feedback, Status, Category, Comment } from '@/types/feedback';
 import data from '@/lib/data/data.json';
 
 interface RawUser {
@@ -38,6 +38,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setFeedbacks = useFeedbackStore((state) => state.setFeedbacks);
 
   useEffect(() => {
+    const stored = localStorage.getItem('feedbacks');
+
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored) as Feedback[];
+        setFeedbacks(parsed);
+        return;
+      } catch (err) {
+        console.error('Failed to parse feedbacks from localStorage:', err);
+      }
+    }
+
+    // fallback to normalized data.json
     const normalized: Feedback[] = data.productRequests.map(
       (fb: RawFeedback) => ({
         id: fb.id,
@@ -45,11 +58,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         description: fb.description,
         category: (fb.category.charAt(0).toUpperCase() +
           fb.category.slice(1).toLowerCase()) as Category,
-        status:
-          fb.status === 'in-progress'
-            ? 'In-Progress'
-            : ((fb.status.charAt(0).toUpperCase() +
-                fb.status.slice(1).toLowerCase()) as Status),
+        status: (() => {
+          switch (fb.status.toLowerCase()) {
+            case 'planned':
+              return Status.Planned;
+            case 'in-progress':
+              return Status.InProgress;
+            case 'live':
+              return Status.Live;
+            default:
+              return Status.Suggestion;
+          }
+        })(),
         upvotes: fb.upvotes,
         upvoted: false,
         comments: fb.comments?.map(

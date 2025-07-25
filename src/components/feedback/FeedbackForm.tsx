@@ -4,10 +4,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFeedbackStore } from '@/store/feedbackStore';
-import { Category, Status } from '@/types/feedback';
+import type { Category } from '@/types/feedback';
 import { useRouter } from 'next/navigation';
+import { DEFAULT_STATUS } from '@/types/feedback';
 
-const categories: Category[] = ['UI', 'UX', 'Enhancement', 'Bug', 'Feature'];
+const categories: Category[] = ['ui', 'ux', 'enhancement', 'bug', 'feature'];
 
 const schema = z.object({
   title: z.string().min(3, 'Title is required'),
@@ -33,7 +34,7 @@ export default function FeedbackForm() {
   const onSubmit = (data: FormData) => {
     const newFeedback = {
       id: Date.now(),
-      status: Status.Suggestion,
+      status: DEFAULT_STATUS,
       upvotes: 0,
       comments: [],
       upvoted: false,
@@ -75,7 +76,7 @@ export default function FeedbackForm() {
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
-              {cat}
+              {cat.charAt(0).toUpperCase() + cat.slice(1)}
             </option>
           ))}
         </select>

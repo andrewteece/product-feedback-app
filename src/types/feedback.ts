@@ -1,21 +1,6 @@
-export type Category = 'UI' | 'UX' | 'Enhancement' | 'Bug' | 'Feature';
+export type Category = 'ui' | 'ux' | 'enhancement' | 'bug' | 'feature';
 
-export enum Status {
-  Suggestion = 'Suggestion',
-  Planned = 'Planned',
-  InProgress = 'In-Progress',
-  Live = 'Live',
-}
-
-export interface CommentReply {
-  content: string;
-  replyingTo: string;
-  user: {
-    name: string;
-    username: string;
-    avatarUrl: string;
-  };
-}
+export type Status = 'suggestion' | 'planned' | 'in-progress' | 'live';
 
 export interface Comment {
   id: number;
@@ -23,9 +8,9 @@ export interface Comment {
   user: {
     name: string;
     username: string;
-    avatarUrl: string;
+    image: string;
   };
-  replies?: CommentReply[];
+  replies?: Comment[];
 }
 
 export interface Feedback {
@@ -38,3 +23,34 @@ export interface Feedback {
   upvoted: boolean;
   comments?: Comment[];
 }
+
+// ✅ UI-friendly display labels
+export const STATUS_LABELS: Record<Status, string> = {
+  suggestion: 'Suggestion',
+  planned: 'Planned',
+  'in-progress': 'In-Progress',
+  live: 'Live',
+};
+
+export const DEFAULT_STATUS: Status = 'suggestion';
+
+export const STATUS_DESCRIPTIONS: Record<Status, string> = {
+  suggestion: 'Ideas awaiting feedback',
+  planned: 'Ideas prioritized for research',
+  'in-progress': 'Currently being developed',
+  live: 'Released features',
+};
+
+export const STATUS_COLORS: Record<Status, string> = {
+  suggestion: 'gray',
+  planned: 'var(--status-planned)',
+  'in-progress': 'var(--status-inprogress)',
+  live: 'var(--status-live)',
+};
+
+export const STATUS_VALUES: Status[] = [
+  'suggestion',
+  'planned',
+  'in-progress',
+  'live',
+];

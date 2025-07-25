@@ -11,6 +11,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  useDroppable,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -20,27 +21,14 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 import { useFeedbackStore } from '@/store/feedbackStore';
-import { Feedback } from '@/types/feedback';
+import type { Feedback, Status } from '@/types/feedback';
+import {
+  STATUS_LABELS,
+  STATUS_DESCRIPTIONS,
+  STATUS_COLORS,
+} from '@/types/feedback';
 
-type StatusColumn = 'Planned' | 'In-Progress' | 'Live';
-
-const COLUMN_META: Record<
-  StatusColumn,
-  { title: string; description: string }
-> = {
-  Planned: {
-    title: 'Planned',
-    description: 'Ideas prioritized for research',
-  },
-  'In-Progress': {
-    title: 'In-Progress',
-    description: 'Currently being developed',
-  },
-  Live: {
-    title: 'Live',
-    description: 'Released features',
-  },
-};
+type StatusColumn = Extract<Status, 'planned' | 'in-progress' | 'live'>;
 
 const RoadmapPage = () => {
   const feedbacks = useFeedbackStore((state) => state.feedbacks);
@@ -51,58 +39,19 @@ const RoadmapPage = () => {
     useSensor(KeyboardSensor)
   );
 
-  const columns: StatusColumn[] = ['Planned', 'In-Progress', 'Live'];
+  const columns: StatusColumn[] = ['planned', 'in-progress', 'live'];
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    const activeId = active.id;
-    const overColumn = over.id as StatusColumn;
+    const activeId = active.id.toString();
+    const overId = over.id.toString() as StatusColumn;
 
     const feedback = feedbacks.find((f) => f.id.toString() === activeId);
-    if (feedback && feedback.status !== overColumn) {
-      updateStatus(feedback.id, overColumn);
+    if (feedback && feedback.status !== overId) {
+      updateStatus(feedback.id, overId);
     }
-  };
-
-  const renderColumn = (status: StatusColumn) => {
-    const columnData = feedbacks
-      .filter((f) => f.status === status)
-      .sort((a, b) => b.upvotes - a.upvotes);
-
-    return (
-      <div key={status}>
-        <div className='flex items-center gap-2 mb-1'>
-          <span
-            className={`w-2 h-2 rounded-full ${
-              status === 'Planned'
-                ? 'bg-[var(--status-planned)]'
-                : status === 'In-Progress'
-                  ? 'bg-[var(--status-inprogress)]'
-                  : 'bg-[var(--status-live)]'
-            }`}
-          />
-          <h2 className='text-md font-semibold text-[var(--text-primary)]'>
-            {COLUMN_META[status].title} ({columnData.length})
-          </h2>
-        </div>
-        <p className='text-sm text-[var(--text-muted)] mb-4'>
-          {COLUMN_META[status].description}
-        </p>
-
-        <SortableContext
-          items={columnData.map((item) => item.id.toString())}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className='min-h-[20px] space-y-6'>
-            {columnData.map((item) => (
-              <DraggableCard key={item.id} item={item} />
-            ))}
-          </div>
-        </SortableContext>
-      </div>
-    );
   };
 
   return (
@@ -131,7 +80,9 @@ const RoadmapPage = () => {
         onDragEnd={handleDragEnd}
       >
         <div className='grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-10'>
-          {columns.map(renderColumn)}
+          {columns.map((column) => (
+            <DroppableColumn key={column} status={column} items={feedbacks} />
+          ))}
         </div>
       </DndContext>
     </main>
@@ -140,7 +91,49 @@ const RoadmapPage = () => {
 
 export default RoadmapPage;
 
-const DraggableCard = ({ item }: { item: Feedback }) => {
+function DroppableColumn({
+  status,
+  items,
+}: {
+  status: StatusColumn;
+  items: Feedback[];
+}) {
+  const { setNodeRef } = useDroppable({ id: status });
+
+  const columnData = items
+    .filter((item) => item.status === status)
+    .sort((a, b) => b.upvotes - a.upvotes);
+
+  return (
+    <div ref={setNodeRef} id={status}>
+      <div className='flex items-center gap-2 mb-1'>
+        <span
+          className='w-2 h-2 rounded-full'
+          style={{ backgroundColor: STATUS_COLORS[status] }}
+        />
+        <h2 className='text-md font-semibold text-[var(--text-primary)]'>
+          {STATUS_LABELS[status]} ({columnData.length})
+        </h2>
+      </div>
+      <p className='text-sm text-[var(--text-muted)] mb-4'>
+        {STATUS_DESCRIPTIONS[status]}
+      </p>
+
+      <SortableContext
+        items={columnData.map((item) => item.id.toString())}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className='min-h-[20px] space-y-6'>
+          {columnData.map((item) => (
+            <DraggableCard key={item.id} item={item} />
+          ))}
+        </div>
+      </SortableContext>
+    </div>
+  );
+}
+
+function DraggableCard({ item }: { item: Feedback }) {
   const toggleUpvote = useFeedbackStore((state) => state.toggleUpvote);
   const {
     attributes,
@@ -161,16 +154,11 @@ const DraggableCard = ({ item }: { item: Feedback }) => {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Link href={`/feedback/${item.id}`}>
         <div
-          className={`bg-[var(--bg-card)] p-7 rounded-lg border-t-4 shadow-md hover:ring-2 ring-[var(--btn-primary)] transition-transform hover:-translate-y-1 ${
-            item.status === 'Planned'
-              ? 'border-[var(--status-planned)]'
-              : item.status === 'In-Progress'
-                ? 'border-[var(--status-inprogress)]'
-                : 'border-[var(--status-live)]'
-          }`}
+          className={`bg-[var(--bg-card)] p-7 rounded-lg border-t-4 shadow-md hover:ring-2 ring-[var(--btn-primary)] transition-transform hover:-translate-y-1`}
+          style={{ borderColor: STATUS_COLORS[item.status] }}
         >
           <p className='text-sm text-[var(--text-muted)] capitalize mb-2'>
-            {item.status}
+            {STATUS_LABELS[item.status]}
           </p>
           <h3 className='text-md font-bold text-[var(--text-primary)]'>
             {item.title}
@@ -219,4 +207,4 @@ const DraggableCard = ({ item }: { item: Feedback }) => {
       </Link>
     </div>
   );
-};
+}
