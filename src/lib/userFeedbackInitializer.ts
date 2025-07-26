@@ -1,82 +1,65 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useFeedbackStore } from '@/store/feedbackStore';
 import data from '@/lib/data/data.json';
-import type { Feedback, Comment, Category, Status } from '@/types/feedback';
+import { useFeedbackStore } from '@/store/feedbackStore';
+import type { Feedback, Category, Status, Comment } from '@/types/feedback';
 
-let globalId = 99999;
+let commentIdCounter = 1000;
 
-// Raw shape from data.json (before we type-sanitize it)
+type RawReply = {
+  content: string;
+  replyingTo?: string;
+  user: {
+    image: string;
+    name: string;
+    username: string;
+  };
+};
+
 type RawComment = {
-  id?: number;
+  id: number;
   content: string;
   user: {
     image: string;
     name: string;
     username: string;
   };
-  replies?: RawComment[];
+  replies?: RawReply[];
 };
 
-const normalizeCategory = (raw: string): Category => {
-  const lower = raw.toLowerCase();
-  if (
-    lower === 'ui' ||
-    lower === 'ux' ||
-    lower === 'bug' ||
-    lower === 'feature' ||
-    lower === 'enhancement'
-  ) {
-    return lower as Category;
-  }
-  return 'feature';
-};
+function normalizeComments(comments: RawComment[]): Comment[] {
+  return comments.map((comment) => {
+    const base: Comment = {
+      id: comment.id,
+      content: comment.content,
+      user: comment.user,
+    };
 
-const normalizeStatus = (raw: string): Status => {
-  const lower = raw.toLowerCase();
-  if (
-    lower === 'suggestion' ||
-    lower === 'planned' ||
-    lower === 'in-progress' ||
-    lower === 'live'
-  ) {
-    return lower as Status;
-  }
-  return 'suggestion';
-};
+    if (comment.replies && Array.isArray(comment.replies)) {
+      base.replies = comment.replies.map((reply) => ({
+        id: commentIdCounter++,
+        content: reply.content,
+        user: reply.user,
+      }));
+    }
 
-const normalizeReplies = (replies: RawComment[] = []): Comment[] =>
-  replies.map((reply) => ({
-    id: reply.id ?? globalId++,
-    content: reply.content,
-    user: reply.user,
-    replies: [], // nested replies not supported in original dataset
-  }));
-
-const normalizeComments = (comments: RawComment[] = []): Comment[] =>
-  comments.map((comment) => ({
-    id: comment.id ?? globalId++,
-    content: comment.content,
-    user: comment.user,
-    replies: normalizeReplies(comment.replies),
-  }));
+    return base;
+  });
+}
 
 export function useFeedbackInitializer() {
-  const feedbacks = useFeedbackStore((s) => s.feedback);
-  const setFeedbacks = useFeedbackStore((s) => s.setFeedback);
+  const setFeedback = useFeedbackStore((state) => state.setFeedback);
 
   useEffect(() => {
-    if (feedbacks.length === 0) {
-      const normalized: Feedback[] = data.productRequests.map((item) => ({
-        ...item,
-        upvoted: false,
-        category: normalizeCategory(item.category),
-        status: normalizeStatus(item.status),
-        comments: normalizeComments(item.comments),
-      }));
+    const enriched: Feedback[] = data.productRequests.map((item) => ({
+      ...item,
+      upvoted: false,
+      category: item.category.toLowerCase() as Category,
+      status: item.status.toLowerCase() as Status,
+      comments: item.comments ? normalizeComments(item.comments) : [],
+    }));
 
-      setFeedbacks(normalized);
-    }
-  }, [feedbacks, setFeedbacks]);
+    setFeedback(enriched);
+  }, [setFeedback]);
 }

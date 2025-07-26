@@ -24,7 +24,6 @@ export interface Feedback {
   comments?: Comment[];
 }
 
-// ✅ UI-friendly display labels
 export const STATUS_LABELS: Record<Status, string> = {
   suggestion: 'Suggestion',
   planned: 'Planned',

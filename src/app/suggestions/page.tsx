@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useFeedbackStore } from '@/store/feedbackStore';
 import SuggestionList from '@/components/feedback/SuggestionList';
@@ -18,7 +19,7 @@ export default function SuggestionsPage() {
 
   // You can still handle category with Zustand, or keep local if preferred
   // For now, assuming it's local state:
-  const [category, setCategory] = React.useState<'all' | string>('all');
+  const [category, setCategory] = useState<'all' | string>('all');
 
   return (
     <main className='px-4 py-6 sm:px-8 lg:px-16 bg-[var(--bg-page)] min-h-screen text-[var(--text-primary)]'>

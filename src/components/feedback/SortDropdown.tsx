@@ -1,22 +1,22 @@
 'use client';
 
+export type SortOption =
+  | 'most-upvotes'
+  | 'least-upvotes'
+  | 'most-comments'
+  | 'least-comments';
+
 interface SortDropdownProps {
-  value: string;
+  value: SortOption;
   onChange: (value: SortOption) => void;
 }
 
-export type SortOption =
-  | 'Most Upvotes'
-  | 'Least Upvotes'
-  | 'Most Comments'
-  | 'Least Comments';
-
-const options: SortOption[] = [
-  'Most Upvotes',
-  'Least Upvotes',
-  'Most Comments',
-  'Least Comments',
-];
+const SORT_LABELS: Record<SortOption, string> = {
+  'most-upvotes': 'Most Upvotes',
+  'least-upvotes': 'Least Upvotes',
+  'most-comments': 'Most Comments',
+  'least-comments': 'Least Comments',
+};
 
 export default function SortDropdown({ value, onChange }: SortDropdownProps) {
   return (
@@ -30,9 +30,9 @@ export default function SortDropdown({ value, onChange }: SortDropdownProps) {
         onChange={(e) => onChange(e.target.value as SortOption)}
         className='rounded border px-2 py-1 text-sm bg-white dark:bg-slate-800 dark:text-white'
       >
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
+        {Object.entries(SORT_LABELS).map(([key, label]) => (
+          <option key={key} value={key}>
+            {label}
           </option>
         ))}
       </select>

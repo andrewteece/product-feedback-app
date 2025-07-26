@@ -9,7 +9,7 @@ export default function FeedbackDetailPage() {
   const id = Number(params?.id);
 
   const feedback = useFeedbackStore((state) =>
-    state.feedbacks.find((f) => f.id === id)
+    state.feedback.find((f) => f.id === id)
   );
   const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote);
 
