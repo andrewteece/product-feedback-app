@@ -35,7 +35,7 @@ interface RawFeedback {
 }
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const setFeedbacks = useFeedbackStore((state) => state.setFeedbacks);
+  const setFeedbacks = useFeedbackStore((state) => state.setFeedback);
 
   useEffect(() => {
     const stored = localStorage.getItem('feedbacks');

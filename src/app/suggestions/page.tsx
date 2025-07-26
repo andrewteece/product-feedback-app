@@ -5,13 +5,20 @@ import { useFeedbackStore } from '@/store/feedbackStore';
 import SuggestionList from '@/components/feedback/SuggestionList';
 import CategoryFilter from '@/components/feedback/CategoryFilter';
 import SortDropdown from '@/components/feedback/SortDropdown';
-import { useSuggestionsFilters } from '@/hooks/useSuggestionsFilters';
+import { useFeedbackInitializer } from '@/lib/userFeedbackInitializer';
 
 export default function SuggestionsPage() {
-  const feedbacks = useFeedbackStore((s) => s.feedbacks);
+  useFeedbackInitializer();
+
+  const feedbacks = useFeedbackStore((s) => s.feedback);
   const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote);
 
-  const { category, sort, updateFilters } = useSuggestionsFilters();
+  const sort = useFeedbackStore((s) => s.sortOption);
+  const setSort = useFeedbackStore((s) => s.setSortOption);
+
+  // You can still handle category with Zustand, or keep local if preferred
+  // For now, assuming it's local state:
+  const [category, setCategory] = React.useState<'all' | string>('all');
 
   return (
     <main className='px-4 py-6 sm:px-8 lg:px-16 bg-[var(--bg-page)] min-h-screen text-[var(--text-primary)]'>
@@ -19,14 +26,8 @@ export default function SuggestionsPage() {
         <h1 className='text-2xl font-bold'>Suggestions</h1>
 
         <div className='flex flex-col sm:flex-row sm:items-center gap-4'>
-          <SortDropdown
-            value={sort}
-            onChange={(val) => updateFilters({ sort: val })}
-          />
-          <CategoryFilter
-            selected={category}
-            onChange={(val) => updateFilters({ category: val })}
-          />
+          <SortDropdown value={sort} onChange={setSort} />
+          <CategoryFilter selected={category} onChange={setCategory} />
         </div>
 
         <Link

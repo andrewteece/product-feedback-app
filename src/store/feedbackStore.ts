@@ -2,43 +2,55 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Feedback, Status, Category } from '@/types/feedback';
 
+type SortOption =
+  | 'most-upvotes'
+  | 'least-upvotes'
+  | 'most-comments'
+  | 'least-comments';
+
 interface FeedbackState {
-  feedbacks: Feedback[];
+  feedback: Feedback[];
   selectedCategory: Category | 'All';
   setSelectedCategory: (category: Category | 'All') => void;
-  setFeedbacks: (feedbacks: Feedback[]) => void;
+  setFeedback: (feedback: Feedback[]) => void;
   addFeedback: (feedback: Feedback) => void;
   updateFeedbackStatus: (id: number, newStatus: Status) => void;
   toggleUpvote: (id: number) => void;
   addComment: (feedbackId: number, content: string) => void;
   addReply: (feedbackId: number, commentId: number, content: string) => void;
+
+  sortOption: SortOption;
+  setSortOption: (option: SortOption) => void;
 }
 
 export const useFeedbackStore = create<FeedbackState>()(
   subscribeWithSelector((set) => ({
-    feedbacks: [],
+    feedback: [],
 
     selectedCategory: 'All',
 
     setSelectedCategory: (category) => set({ selectedCategory: category }),
 
-    setFeedbacks: (feedbacks) => set({ feedbacks }),
+    setFeedback: (newFeedback: Feedback[]) => set({ feedback: newFeedback }),
+
+    sortOption: 'most-upvotes',
+    setSortOption: (option) => set({ sortOption: option }),
 
     addFeedback: (feedback) =>
       set((state) => ({
-        feedbacks: [...state.feedbacks, feedback],
+        feedback: [...state.feedback, feedback],
       })),
 
     updateFeedbackStatus: (id, newStatus) =>
       set((state) => ({
-        feedbacks: state.feedbacks.map((fb) =>
+        feedback: state.feedback.map((fb) =>
           fb.id === id ? { ...fb, status: newStatus } : fb
         ),
       })),
 
     toggleUpvote: (id) =>
       set((state) => ({
-        feedbacks: state.feedbacks.map((fb) =>
+        feedback: state.feedback.map((fb) =>
           fb.id === id
             ? {
                 ...fb,
@@ -51,7 +63,7 @@ export const useFeedbackStore = create<FeedbackState>()(
 
     addComment: (feedbackId, content) =>
       set((state) => ({
-        feedbacks: state.feedbacks.map((fb) =>
+        feedback: state.feedback.map((fb) =>
           fb.id === feedbackId
             ? {
                 ...fb,
@@ -75,7 +87,7 @@ export const useFeedbackStore = create<FeedbackState>()(
 
     addReply: (feedbackId, commentId, content) =>
       set((state) => ({
-        feedbacks: state.feedbacks.map((fb) => {
+        feedback: state.feedback.map((fb) => {
           if (fb.id !== feedbackId) return fb;
           return {
             ...fb,
@@ -104,9 +116,9 @@ export const useFeedbackStore = create<FeedbackState>()(
   }))
 );
 
-// ✅ Persist feedbacks to localStorage
+//  Persist feedbacks to localStorage
 useFeedbackStore.subscribe(
-  (state) => state.feedbacks,
+  (state) => state.feedback,
   (feedbacks) => {
     try {
       localStorage.setItem('feedbacks', JSON.stringify(feedbacks));

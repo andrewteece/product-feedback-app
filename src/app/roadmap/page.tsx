@@ -29,13 +29,16 @@ import {
   STATUS_DESCRIPTIONS,
   STATUS_COLORS,
 } from '@/types/feedback';
+import { useFeedbackInitializer } from '@/lib/userFeedbackInitializer';
 
 type StatusColumn = Extract<Status, 'planned' | 'in-progress' | 'live'>;
 
 const columns: StatusColumn[] = ['planned', 'in-progress', 'live'];
 
 export default function RoadmapPage() {
-  const feedbacks = useFeedbackStore((state) => state.feedbacks);
+  useFeedbackInitializer();
+
+  const feedbackList = useFeedbackStore((state) => state.feedback);
   const updateStatus = useFeedbackStore((state) => state.updateFeedbackStatus);
 
   const sensors = useSensors(
@@ -61,9 +64,9 @@ export default function RoadmapPage() {
     const activeId = active.id.toString();
     const overId = over.id.toString() as StatusColumn;
 
-    const feedback = feedbacks.find((f) => f.id.toString() === activeId);
-    if (feedback && feedback.status !== overId) {
-      updateStatus(feedback.id, overId);
+    const matched = feedbackList.find((f) => f.id.toString() === activeId);
+    if (matched && matched.status !== overId) {
+      updateStatus(matched.id, overId);
     }
   };
 
@@ -100,7 +103,7 @@ export default function RoadmapPage() {
             }`}
           >
             {STATUS_LABELS[col]} (
-            {feedbacks.filter((f) => f.status === col).length})
+            {feedbackList.filter((f) => f.status === col).length})
           </button>
         ))}
       </div>
@@ -110,7 +113,7 @@ export default function RoadmapPage() {
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <DroppableColumn status={statusParam} items={feedbacks} />
+        <DroppableColumn status={statusParam} items={feedbackList} />
       </DndContext>
     </main>
   );

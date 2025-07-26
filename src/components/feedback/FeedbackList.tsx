@@ -6,22 +6,22 @@ import data from '@/lib/data/data.json';
 import FeedbackCard from '@/components/feedback/FeedbackCard';
 
 export default function FeedbackList() {
-  const feedbacks = useFeedbackStore((s) => s.feedbacks);
-  const setFeedbacks = useFeedbackStore((s) => s.setFeedbacks);
+  const feedback = useFeedbackStore((s) => s.feedback);
+  const setFeedback = useFeedbackStore((s) => s.setFeedback);
   const selectedCategory = useFeedbackStore((s) => s.selectedCategory);
   const sortOption = useFeedbackStore((s) => s.sortOption);
 
   useEffect(() => {
-    if (feedbacks.length === 0) {
-      setFeedbacks(data.productRequests);
+    if (feedback.length === 0) {
+      setFeedback(data.productRequests);
     }
-  }, [feedbacks, setFeedbacks]);
+  }, [feedback, setFeedback]);
 
   const visibleFeedbacks = useMemo(() => {
     const filtered =
       selectedCategory === 'All'
-        ? feedbacks
-        : feedbacks.filter((f) => f.category === selectedCategory);
+        ? feedback
+        : feedback.filter((f) => f.category === selectedCategory);
 
     switch (sortOption) {
       case 'Most Upvotes':
@@ -39,7 +39,7 @@ export default function FeedbackList() {
       default:
         return filtered;
     }
-  }, [feedbacks, selectedCategory, sortOption]);
+  }, [feedback, selectedCategory, sortOption]);
 
   return (
     <section className='space-y-4'>
