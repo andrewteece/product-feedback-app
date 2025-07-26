@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&family=Jost:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 @layer base {
   :root {
+    /* Font already set in Tailwind config: font-sans -> Jost */
+
     /* Text */
     --text-primary: #3a4374;
     --text-muted: #647196;
@@ -9,17 +13,17 @@
     --bg-card: #ffffff;
 
     /* Buttons */
-    --btn-primary: #4661e6;
-    --btn-primary-hover: #ad1fea;
+    --btn-primary: #ad1fea;
+    --btn-primary-hover: #c75af6;
 
     /* Status tags */
     --status-planned: #f49f85;
     --status-inprogress: #ad1fea;
     --status-live: #62bcfa;
 
-    /* Border */
+    /* Borders */
     --border-header: #e5e5e5;
-    --border-card: #e5eaf2;
+    --border-card: #cdd2ee;
 
     /* Badge */
     --badge-bg: #f2f4ff;
@@ -43,7 +47,7 @@
     --status-inprogress: #ad1fea;
     --status-live: #62bcfa;
 
-    /* Border */
+    /* Borders */
     --border-header: #3b3b3b;
     --border-card: #3b3f51;
 

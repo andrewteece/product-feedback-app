@@ -1,23 +1,24 @@
-// tailwind.config.ts
-import type { Config } from 'tailwindcss';
+import { type Config } from 'tailwindcss';
 
 const config: Config = {
-  darkMode: 'class',
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Jost', 'sans-serif'],
+      },
       colors: {
         primary: '#AD1FEA',
-        accent: '#4661E6',
-        muted: '#647196',
+        'primary-hover': '#C75AF6',
+        accent: '#F49F85',
+        planned: '#F49F85',
+        inprogress: '#AD1FEA',
+        live: '#62BCFA',
         'text-primary': '#3A4374',
-        'bg-light': '#F7F8FD',
+        'text-muted': '#647196',
+        'bg-page': '#F7F8FD',
         'bg-card': '#FFFFFF',
-        status: {
-          planned: '#F49F85',
-          inProgress: '#AD1FEA',
-          live: '#62BCFA',
-        },
+        'border-card': '#CDD2EE',
       },
     },
   },

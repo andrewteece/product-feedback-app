@@ -1,9 +1,14 @@
 import '../styles/globals.css';
-import { Inter } from 'next/font/google';
+import { Jost } from 'next/font/google';
 import Header from '@/components/layout/Header';
 import { AppProvider } from '@/components/providers/AppProvider';
 
-const inter = Inter({ subsets: ['latin'] });
+const jost = Jost({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-jost', // Optional for Tailwind integration
+  display: 'swap',
+});
 
 export const metadata = {
   title: 'Product Feedback App',
@@ -17,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' className='bg-[var(--bg-page)] text-[var(--text-primary)]'>
-      <body className={`${inter.className} min-h-screen`}>
+      <body className={`${jost.className} min-h-screen`}>
         <AppProvider>
           <Header />
           <main className='max-w-3xl mx-auto px-4 py-8'>{children}</main>
