@@ -1,130 +1,100 @@
 import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
-import type { Feedback, Status, Category } from '@/types/feedback';
-
-type SortOption =
-  | 'most-upvotes'
-  | 'least-upvotes'
-  | 'most-comments'
-  | 'least-comments';
+import type {
+  Feedback,
+  FilterableCategory,
+  SortOption,
+} from '@/types/feedback';
 
 interface FeedbackState {
   feedback: Feedback[];
-  selectedCategory: Category | 'All';
-  setSelectedCategory: (category: Category | 'All') => void;
   setFeedback: (feedback: Feedback[]) => void;
-  addFeedback: (feedback: Feedback) => void;
-  updateFeedbackStatus: (id: number, newStatus: Status) => void;
-  toggleUpvote: (id: number) => void;
-  addComment: (feedbackId: number, content: string) => void;
-  addReply: (feedbackId: number, commentId: number, content: string) => void;
 
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
+
+  category: FilterableCategory;
+  setCategory: (category: FilterableCategory) => void;
+
+  toggleUpvote: (feedbackId: number) => void;
+  addComment: (feedbackId: number, content: string) => void;
+  addReply: (feedbackId: number, commentId: number, content: string) => void;
 }
 
-export const useFeedbackStore = create<FeedbackState>()(
-  subscribeWithSelector((set) => ({
-    feedback: [],
+export const useFeedbackStore = create<FeedbackState>((set, get) => ({
+  feedback: [],
+  setFeedback: (newFeedback) => set({ feedback: newFeedback }),
 
-    selectedCategory: 'All',
+  sortOption: 'most-upvotes',
+  setSortOption: (option) => set({ sortOption: option }),
 
-    setSelectedCategory: (category) => set({ selectedCategory: category }),
+  category: 'all',
+  setCategory: (category) => set({ category }),
 
-    setFeedback: (newFeedback: Feedback[]) => set({ feedback: newFeedback }),
-
-    sortOption: 'most-upvotes',
-    setSortOption: (option) => set({ sortOption: option }),
-
-    addFeedback: (feedback) =>
-      set((state) => ({
-        feedback: [...state.feedback, feedback],
-      })),
-
-    updateFeedbackStatus: (id, newStatus) =>
-      set((state) => ({
-        feedback: state.feedback.map((fb) =>
-          fb.id === id ? { ...fb, status: newStatus } : fb
-        ),
-      })),
-
-    toggleUpvote: (id) =>
-      set((state) => ({
-        feedback: state.feedback.map((fb) =>
-          fb.id === id
-            ? {
-                ...fb,
-                upvoted: !fb.upvoted,
-                upvotes: fb.upvoted ? fb.upvotes - 1 : fb.upvotes + 1,
-              }
-            : fb
-        ),
-      })),
-
-    addComment: (feedbackId, content) =>
-      set((state) => ({
-        feedback: state.feedback.map((fb) =>
-          fb.id === feedbackId
-            ? {
-                ...fb,
-                comments: [
-                  ...(fb.comments ?? []),
-                  {
-                    id: Date.now(),
-                    content,
-                    user: {
-                      name: 'Guest User',
-                      username: 'guest',
-                      image: '/assets/user-images/image-default.jpg',
-                    },
-                    replies: [],
-                  },
-                ],
-              }
-            : fb
-        ),
-      })),
-
-    addReply: (feedbackId, commentId, content) =>
-      set((state) => ({
-        feedback: state.feedback.map((fb) => {
-          if (fb.id !== feedbackId) return fb;
-          return {
-            ...fb,
-            comments: fb.comments?.map((comment) =>
-              comment.id === commentId
-                ? {
-                    ...comment,
-                    replies: [
-                      ...(comment.replies ?? []),
-                      {
-                        id: Date.now(),
-                        content,
-                        user: {
-                          name: 'Guest User',
-                          username: 'guest',
-                          image: '/assets/user-images/image-default.jpg',
-                        },
-                      },
-                    ],
-                  }
-                : comment
-            ),
-          };
-        }),
-      })),
-  }))
-);
-
-//  Persist feedbacks to localStorage
-useFeedbackStore.subscribe(
-  (state) => state.feedback,
-  (feedbacks) => {
-    try {
-      localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
-    } catch (err) {
-      console.error('Failed to persist feedbacks to localStorage:', err);
-    }
+  toggleUpvote: (feedbackId) => {
+    const updated = get().feedback.map((item) =>
+      item.id === feedbackId
+        ? {
+            ...item,
+            upvoted: !item.upvoted,
+            upvotes: item.upvoted ? item.upvotes - 1 : item.upvotes + 1,
+          }
+        : item
+    );
+    set({ feedback: updated });
   },
-  { fireImmediately: false }
-);
+
+  addComment: (feedbackId, content) => {
+    const updated = get().feedback.map((item) =>
+      item.id === feedbackId
+        ? {
+            ...item,
+            comments: [
+              ...(item.comments ?? []),
+              {
+                id: Date.now(),
+                content,
+                user: {
+                  image: '/assets/user-images/image-zena.jpg',
+                  name: 'Zena Kelley',
+                  username: 'velvetround',
+                },
+              },
+            ],
+          }
+        : item
+    );
+    set({ feedback: updated });
+  },
+
+  addReply: (feedbackId, commentId, content) => {
+    const updated = get().feedback.map((item) => {
+      if (item.id !== feedbackId) return item;
+
+      const updatedComments = (item.comments ?? []).map((comment) => {
+        if (comment.id !== commentId) return comment;
+
+        const replies = comment.replies ?? [];
+
+        return {
+          ...comment,
+          replies: [
+            ...replies,
+            {
+              id: Date.now(),
+              content,
+              user: {
+                image: '/assets/user-images/image-zena.jpg',
+                name: 'Zena Kelley',
+                username: 'velvetround',
+              },
+            },
+          ],
+        };
+      });
+
+      return { ...item, comments: updatedComments };
+    });
+
+    set({ feedback: updated });
+  },
+}));

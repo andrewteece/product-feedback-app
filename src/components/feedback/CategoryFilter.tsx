@@ -1,9 +1,9 @@
 'use client';
 
-import type { Category } from '@/types/feedback';
+import type { FilterableCategory } from '@/types/feedback';
 import clsx from 'clsx';
 
-const categories: (Category | 'all')[] = [
+const categories: FilterableCategory[] = [
   'all',
   'ui',
   'ux',
@@ -13,8 +13,8 @@ const categories: (Category | 'all')[] = [
 ];
 
 interface CategoryFilterProps {
-  selected: Category | 'all';
-  onChange: (category: Category | 'all') => void;
+  selected: FilterableCategory;
+  onChange: (category: FilterableCategory) => void;
 }
 
 export default function CategoryFilter({

@@ -1,6 +1,27 @@
 export type Category = 'ui' | 'ux' | 'enhancement' | 'bug' | 'feature';
-
 export type Status = 'suggestion' | 'planned' | 'in-progress' | 'live';
+export type FilterableCategory = Category | 'all';
+
+export type SortOption =
+  | 'most-upvotes'
+  | 'least-upvotes'
+  | 'most-comments'
+  | 'least-comments';
+
+export const SORT_LABELS: Record<SortOption, string> = {
+  'most-upvotes': 'Most Upvotes',
+  'least-upvotes': 'Least Upvotes',
+  'most-comments': 'Most Comments',
+  'least-comments': 'Least Comments',
+};
+
+export const CATEGORY_LABELS: Record<Category, string> = {
+  feature: 'Feature',
+  ui: 'UI',
+  ux: 'UX',
+  enhancement: 'Enhancement',
+  bug: 'Bug',
+};
 
 export interface Comment {
   id: number;
