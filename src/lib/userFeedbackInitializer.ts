@@ -5,8 +5,6 @@ import data from '@/lib/data/data.json';
 import { useFeedbackStore } from '@/store/feedbackStore';
 import type { Feedback, Category, Status, Comment } from '@/types/feedback';
 
-let commentIdCounter = 1000;
-
 type RawReply = {
   content: string;
   replyingTo?: string;
@@ -28,19 +26,30 @@ type RawComment = {
   replies?: RawReply[];
 };
 
+// ✅ Fix './' to '/'
+const fixImagePath = (image: string): string =>
+  image.startsWith('./') ? image.replace('./', '/') : image;
+
+// ✅ Normalize comments and replies
 function normalizeComments(comments: RawComment[]): Comment[] {
   return comments.map((comment) => {
     const base: Comment = {
       id: comment.id,
       content: comment.content,
-      user: comment.user,
+      user: {
+        ...comment.user,
+        image: fixImagePath(comment.user.image),
+      },
     };
 
     if (comment.replies && Array.isArray(comment.replies)) {
-      base.replies = comment.replies.map((reply) => ({
-        id: commentIdCounter++,
+      base.replies = comment.replies.map((reply, i) => ({
+        id: Date.now() + i, // simple unique fallback
         content: reply.content,
-        user: reply.user,
+        user: {
+          ...reply.user,
+          image: fixImagePath(reply.user.image),
+        },
       }));
     }
 
@@ -48,6 +57,7 @@ function normalizeComments(comments: RawComment[]): Comment[] {
   });
 }
 
+// ✅ Apply to all feedback on initial load
 export function useFeedbackInitializer() {
   const setFeedback = useFeedbackStore((state) => state.setFeedback);
 

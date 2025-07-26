@@ -50,6 +50,7 @@ export default function CommentSection({
                 width={40}
                 height={40}
                 className='rounded-full'
+                priority
               />
               <div>
                 <p className='font-medium text-sm'>{comment.user.name}</p>
