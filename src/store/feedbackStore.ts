@@ -4,6 +4,7 @@ import type {
   FilterableCategory,
   SortOption,
 } from '@/types/feedback';
+import { loadFromLocalStorage, saveToLocalStorage } from '@/lib/persistStore';
 
 interface FeedbackState {
   feedback: Feedback[];
@@ -20,15 +21,31 @@ interface FeedbackState {
   addReply: (feedbackId: number, commentId: number, content: string) => void;
 }
 
+// 🧠 Hydrate from localStorage or fallback to defaults
+const initialFeedback = loadFromLocalStorage<Feedback[]>('feedback') ?? [];
+const initialSort =
+  loadFromLocalStorage<SortOption>('sortOption') ?? 'most-upvotes';
+const initialCategory =
+  loadFromLocalStorage<FilterableCategory>('category') ?? 'all';
+
 export const useFeedbackStore = create<FeedbackState>((set, get) => ({
-  feedback: [],
-  setFeedback: (newFeedback) => set({ feedback: newFeedback }),
+  feedback: initialFeedback,
+  setFeedback: (newFeedback) => {
+    saveToLocalStorage('feedback', newFeedback);
+    set({ feedback: newFeedback });
+  },
 
-  sortOption: 'most-upvotes',
-  setSortOption: (option) => set({ sortOption: option }),
+  sortOption: initialSort,
+  setSortOption: (option) => {
+    saveToLocalStorage('sortOption', option);
+    set({ sortOption: option });
+  },
 
-  category: 'all',
-  setCategory: (category) => set({ category }),
+  category: initialCategory,
+  setCategory: (category) => {
+    saveToLocalStorage('category', category);
+    set({ category });
+  },
 
   toggleUpvote: (feedbackId) => {
     const updated = get().feedback.map((item) =>
@@ -40,6 +57,7 @@ export const useFeedbackStore = create<FeedbackState>((set, get) => ({
           }
         : item
     );
+    saveToLocalStorage('feedback', updated);
     set({ feedback: updated });
   },
 
@@ -63,6 +81,7 @@ export const useFeedbackStore = create<FeedbackState>((set, get) => ({
           }
         : item
     );
+    saveToLocalStorage('feedback', updated);
     set({ feedback: updated });
   },
 
@@ -95,6 +114,7 @@ export const useFeedbackStore = create<FeedbackState>((set, get) => ({
       return { ...item, comments: updatedComments };
     });
 
+    saveToLocalStorage('feedback', updated);
     set({ feedback: updated });
   },
 }));
