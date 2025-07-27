@@ -35,18 +35,18 @@ interface RawFeedback {
 }
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const setFeedbacks = useFeedbackStore((state) => state.setFeedback);
+  const setFeedback = useFeedbackStore((state) => state.setFeedback);
 
   useEffect(() => {
-    const stored = localStorage.getItem('feedbacks');
+    const stored = localStorage.getItem('feedback');
 
     if (stored) {
       try {
         const parsed = JSON.parse(stored) as Feedback[];
-        setFeedbacks(parsed);
+        setFeedback(parsed);
         return;
       } catch (err) {
-        console.error('Failed to parse feedbacks from localStorage:', err);
+        console.error('Failed to parse feedback from localStorage:', err);
       }
     }
 
@@ -95,8 +95,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       })
     );
 
-    setFeedbacks(normalized);
-  }, [setFeedbacks]);
+    setFeedback(normalized);
+  }, [setFeedback]);
 
   return <>{children}</>;
 }

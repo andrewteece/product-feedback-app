@@ -1,238 +1,88 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { useFeedbackStore } from '@/store/feedbackStore';
+import { Status } from '@/types/feedback';
+import { useEffect, useState } from 'react';
+import DraggableCard from '@/components/feedback/DraggableCard';
 import {
   DndContext,
-  closestCenter,
   DragEndEvent,
-  KeyboardSensor,
+  closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
-  useDroppable,
 } from '@dnd-kit/core';
 import {
   SortableContext,
   verticalListSortingStrategy,
-  useSortable,
 } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import DroppableColumn from '@/components/feedback/DroppableColumn';
 
-import { useSearchParams, useRouter } from 'next/navigation';
-
-import { useFeedbackStore } from '@/store/feedbackStore';
-import type { Feedback, Status } from '@/types/feedback';
-import {
-  STATUS_LABELS,
-  STATUS_DESCRIPTIONS,
-  STATUS_COLORS,
-} from '@/types/feedback';
-import { useFeedbackInitializer } from '@/lib/userFeedbackInitializer';
-
-type StatusColumn = Extract<Status, 'planned' | 'in-progress' | 'live'>;
-
-const columns: StatusColumn[] = ['planned', 'in-progress', 'live'];
+const columns: Status[] = ['planned', 'in-progress', 'live'];
 
 export default function RoadmapPage() {
-  useFeedbackInitializer();
-
-  const feedbackList = useFeedbackStore((state) => state.feedback);
-  const updateStatus = useFeedbackStore((state) => state.updateFeedbackStatus);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor)
+  const { feedback, updateStatus } = useFeedbackStore();
+  const [columnData, setColumnData] = useState<Record<Status, typeof feedback>>(
+    {
+      planned: [],
+      'in-progress': [],
+      live: [],
+    }
   );
 
-  const router = useRouter();
-  const params = useSearchParams();
+  const sensors = useSensors(useSensor(PointerSensor));
 
-  const statusParam = (params.get('status') as StatusColumn) ?? 'planned';
-
-  const handleStatusChange = (newStatus: StatusColumn) => {
-    const newParams = new URLSearchParams(params.toString());
-    newParams.set('status', newStatus);
-    router.replace(`/roadmap?${newParams.toString()}`);
-  };
+  useEffect(() => {
+    const grouped = {
+      planned: feedback.filter((f) => f.status === 'planned'),
+      'in-progress': feedback.filter((f) => f.status === 'in-progress'),
+      live: feedback.filter((f) => f.status === 'live'),
+    };
+    setColumnData(grouped);
+  }, [feedback]);
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over) return;
+    const activeId = event.active.id.toString();
+    const overId = event.over?.id?.toString() as Status;
 
-    const activeId = active.id.toString();
-    const overId = over.id.toString() as StatusColumn;
-
-    const matched = feedbackList.find((f) => f.id.toString() === activeId);
-    if (matched && matched.status !== overId) {
-      updateStatus(matched.id, overId);
+    const dragged = feedback.find((f) => f.id.toString() === activeId);
+    if (dragged && dragged.status !== overId) {
+      updateStatus(dragged.id, overId);
     }
   };
 
   return (
-    <main className='px-4 py-6 sm:px-8 lg:px-16 bg-[var(--bg-page)] min-h-screen'>
-      <div className='flex items-center justify-between mb-6'>
-        <Link
-          href='/'
-          className='text-sm font-bold text-[var(--text-primary)] hover:underline'
-        >
-          ← Go Back
-        </Link>
-        <h1 className='text-xl font-bold text-[var(--text-primary)]'>
-          Roadmap
-        </h1>
-        <Link
-          href='/feedback/new'
-          className='bg-[var(--btn-primary)] hover:bg-[var(--btn-primary-hover)] text-white px-4 py-2 rounded-md transition'
-        >
-          + Add Feedback
-        </Link>
-      </div>
-
-      {/* Tab buttons */}
-      <div className='flex gap-4 mb-6 border-b border-[var(--border-card)]'>
-        {columns.map((col) => (
-          <button
-            key={col}
-            onClick={() => handleStatusChange(col)}
-            className={`pb-2 text-sm font-semibold border-b-2 transition ${
-              statusParam === col
-                ? 'border-[var(--btn-primary)] text-[var(--text-primary)]'
-                : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            {STATUS_LABELS[col]} (
-            {feedbackList.filter((f) => f.status === col).length})
-          </button>
-        ))}
-      </div>
+    <div className='p-4 md:p-6'>
+      <h1 className='text-2xl font-bold mb-6'>Roadmap</h1>
 
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <DroppableColumn status={statusParam} items={feedbackList} />
-      </DndContext>
-    </main>
-  );
-}
-
-function DroppableColumn({
-  status,
-  items,
-}: {
-  status: StatusColumn;
-  items: Feedback[];
-}) {
-  const { setNodeRef } = useDroppable({ id: status });
-
-  const columnData = items
-    .filter((item) => item.status === status)
-    .sort((a, b) => b.upvotes - a.upvotes);
-
-  return (
-    <div ref={setNodeRef} id={status}>
-      <div className='flex items-center gap-2 mb-1'>
-        <span
-          className='w-2 h-2 rounded-full'
-          style={{ backgroundColor: STATUS_COLORS[status] }}
-        />
-        <h2 className='text-md font-semibold text-[var(--text-primary)]'>
-          {STATUS_LABELS[status]} ({columnData.length})
-        </h2>
-      </div>
-      <p className='text-sm text-[var(--text-muted)] mb-4'>
-        {STATUS_DESCRIPTIONS[status]}
-      </p>
-
-      <SortableContext
-        items={columnData.map((item) => item.id.toString())}
-        strategy={verticalListSortingStrategy}
-      >
-        <div className='min-h-[20px] space-y-6'>
-          {columnData.map((item) => (
-            <DraggableCard key={item.id} item={item} />
+        <div className='grid gap-6 md:grid-cols-3'>
+          {columns.map((status) => (
+            <DroppableColumn
+              key={status}
+              status={status}
+              items={columnData[status]}
+            >
+              <SortableContext
+                items={columnData[status]}
+                strategy={verticalListSortingStrategy}
+              >
+                {columnData[status].length > 0 ? (
+                  columnData[status].map((item) => (
+                    <DraggableCard key={item.id} feedback={item} />
+                  ))
+                ) : (
+                  <p className='text-sm text-muted italic'>No feedback yet.</p>
+                )}
+              </SortableContext>
+            </DroppableColumn>
           ))}
         </div>
-      </SortableContext>
-    </div>
-  );
-}
-
-function DraggableCard({ item }: { item: Feedback }) {
-  const toggleUpvote = useFeedbackStore((state) => state.toggleUpvote);
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: item.id.toString() });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <Link href={`/feedback/${item.id}`}>
-        <div
-          className={`bg-[var(--bg-card)] p-7 rounded-lg border-t-4 shadow-md hover:ring-2 ring-[var(--btn-primary)] transition-transform hover:-translate-y-1`}
-          style={{ borderColor: STATUS_COLORS[item.status] }}
-        >
-          <p className='text-sm text-[var(--text-muted)] capitalize mb-2'>
-            {STATUS_LABELS[item.status]}
-          </p>
-          <h3 className='text-md font-bold text-[var(--text-primary)]'>
-            {item.title}
-          </h3>
-          <p className='text-sm text-[var(--text-muted)] mb-4'>
-            {item.description}
-          </p>
-          <span className='inline-block bg-[var(--badge-bg)] text-[var(--text-primary)] text-xs font-semibold px-3 py-1 rounded-md mb-4'>
-            {item.category}
-          </span>
-
-          <div className='flex justify-between items-center'>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                toggleUpvote(item.id);
-              }}
-              className={`flex items-center gap-1 px-3 py-1 rounded-lg transition font-semibold text-sm ${
-                item.upvoted
-                  ? 'bg-[var(--btn-primary)] text-white'
-                  : 'bg-[var(--badge-bg)] text-[var(--text-primary)]'
-              }`}
-            >
-              <Image
-                src='/assets/icons/icon-arrow-up.svg'
-                alt='Upvote'
-                width={10}
-                height={10}
-              />
-              {item.upvotes}
-            </button>
-
-            <div className='flex items-center gap-1'>
-              <Image
-                src='/assets/icons/icon-comments.svg'
-                alt='Comments'
-                width={16}
-                height={16}
-              />
-              <span className='text-sm font-semibold text-[var(--text-primary)]'>
-                {item.comments?.length ?? 0}
-              </span>
-            </div>
-          </div>
-        </div>
-      </Link>
+      </DndContext>
     </div>
   );
 }

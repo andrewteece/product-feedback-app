@@ -1,34 +1,38 @@
 'use client';
-import { useFeedbackStore } from '@/store/feedbackStore';
-import type { Category } from '@/types/feedback';
 
-const categories: (Category | 'All')[] = [
-  'All',
-  'UI',
-  'UX',
-  'Enhancement',
-  'Bug',
-  'Feature',
+import { useFeedbackStore } from '@/store/feedbackStore';
+import { Category } from '@/types/feedback';
+import clsx from 'clsx';
+
+const categories: (Category | 'all')[] = [
+  'all',
+  'ui',
+  'ux',
+  'enhancement',
+  'bug',
+  'feature',
 ];
 
 export default function CategoryFilter() {
   const selectedCategory = useFeedbackStore((s) => s.selectedCategory);
-  const setCategory = useFeedbackStore((s) => s.setCategory);
+  const setCategory = useFeedbackStore((s) => s.setSelectedCategory);
 
   return (
-    <div className='flex flex-wrap gap-2 my-4'>
+    <div className='flex flex-wrap gap-2 bg-[var(--bg-card)] p-6 rounded-lg shadow-sm'>
       {categories.map((category) => {
-        const isActive = selectedCategory === category;
+        const normalized = category.toLowerCase() as Category | 'all';
+        const isActive = selectedCategory.toLowerCase() === normalized;
+
         return (
           <button
             key={category}
-            onClick={() => setCategory(category)}
-            className={`px-3 py-1 text-sm rounded-full border transition
-              ${
-                isActive
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-gray-700 dark:text-gray-200'
-              }`}
+            onClick={() => setCategory(normalized)}
+            className={clsx(
+              'capitalize text-sm font-semibold px-4 py-1.5 rounded-xl transition-colors',
+              isActive
+                ? 'bg-[var(--btn-primary)] text-white'
+                : 'bg-[var(--badge-bg)] text-[var(--text-primary)] hover:bg-[var(--btn-primary-hover)] hover:text-white'
+            )}
           >
             {category}
           </button>

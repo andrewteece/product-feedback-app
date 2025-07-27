@@ -52,6 +52,7 @@ function normalizeComments(comments: RawComment[]): Comment[] {
         },
       }));
     }
+    console.log('Normalized comment image:', fixImagePath(comment.user.image));
 
     return base;
   });

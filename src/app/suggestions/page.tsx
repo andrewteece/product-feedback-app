@@ -12,7 +12,7 @@ import type { FilterableCategory } from '@/types/feedback';
 export default function SuggestionsPage() {
   useFeedbackInitializer();
 
-  const feedbacks = useFeedbackStore((s) => s.feedback);
+  const feedback = useFeedbackStore((s) => s.feedback);
   const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote);
 
   const sort = useFeedbackStore((s) => s.sortOption);
@@ -27,7 +27,7 @@ export default function SuggestionsPage() {
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between bg-[var(--bg-card)] px-6 py-4 rounded-lg shadow-sm mb-6'>
         <div className='flex items-center justify-between sm:justify-start sm:gap-8 w-full sm:w-auto'>
           <h1 className='text-lg font-bold text-[var(--text-primary)]'>
-            {feedbacks.length} Suggestions
+            {feedback.length} Suggestions
           </h1>
 
           <div className='flex items-center gap-2 text-sm text-[var(--text-muted)]'>
@@ -45,7 +45,7 @@ export default function SuggestionsPage() {
       </div>
 
       <SuggestionList
-        feedbacks={feedbacks}
+        feedback={feedback}
         category={category}
         sort={sort}
         onUpvote={toggleUpvote}

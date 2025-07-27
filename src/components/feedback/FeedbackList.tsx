@@ -9,7 +9,7 @@ export default function FeedbackList() {
   const selectedCategory = useFeedbackStore((s) => s.selectedCategory);
   const sortOption = useFeedbackStore((s) => s.sortOption);
 
-  const visibleFeedbacks = useMemo(() => {
+  const visibleFeedback = useMemo(() => {
     const filtered =
       selectedCategory === 'All'
         ? feedback
@@ -35,10 +35,10 @@ export default function FeedbackList() {
 
   return (
     <section className='space-y-4'>
-      {visibleFeedbacks.length === 0 ? (
+      {visibleFeedback.length === 0 ? (
         <p className='text-center text-gray-500'>No feedback found.</p>
       ) : (
-        visibleFeedbacks.map((fb) => <FeedbackCard key={fb.id} feedback={fb} />)
+        visibleFeedback.map((fb) => <FeedbackCard key={fb.id} feedback={fb} />)
       )}
     </section>
   );

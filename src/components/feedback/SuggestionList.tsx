@@ -5,19 +5,19 @@ import type { SortOption } from './SortDropdown';
 import FeedbackCard from './FeedbackCard';
 
 interface SuggestionListProps {
-  feedbacks: Feedback[];
+  feedback: Feedback[];
   category: Category | 'all';
   sort: SortOption;
   onUpvote?: (id: number) => void;
 }
 
 export default function SuggestionList({
-  feedbacks,
+  feedback,
   category,
   sort,
   onUpvote,
 }: SuggestionListProps) {
-  const filtered = feedbacks.filter((f) => {
+  const filtered = feedback.filter((f) => {
     return (
       f.status === 'suggestion' &&
       (category === 'all' || f.category === category)
