@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🗳️ Product Feedback App
 
-## Getting Started
+A full-featured feedback board built with Next.js, Tailwind CSS, and Zustand — based on the [Frontend Mentor](https://www.frontendmentor.io/challenges/product-feedback-app-wv1gJVtYb) challenge. Users can submit feedback, upvote suggestions, comment and reply, and view the roadmap.
 
-First, run the development server:
+![Product Feedback App Preview](./public/preview.jpg)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Features
+
+- ✅ View and filter suggestions by category
+- ✅ Sort feedback by upvotes or comment count
+- ✅ Upvote/un-upvote feedback
+- ✅ Add new feedback
+- ✅ Comment on feedback
+- ✅ Reply to comments (with replyingTo tracking)
+- ✅ Drag & drop roadmap to change status (planned, in-progress, live)
+- ✅ Persistent state via Zustand
+- ✅ LocalStorage sync (feedback, upvotes, comments)
+- ✅ Responsive design matching Figma spec
+- ✅ Light & dark mode with Tailwind 4
+- ✅ Accessible and keyboard-navigable UI
+
+---
+
+## 🧱 Tech Stack
+
+| Category       | Tools / Libraries                        |
+|----------------|-------------------------------------------|
+| Framework      | [Next.js 15+](https://nextjs.org)         |
+| Styling        | [Tailwind CSS 4](https://tailwindcss.com) |
+| State Mgmt     | [Zustand](https://zustand-demo.pmnd.rs/)  |
+| Animation      | Framer Motion                             |
+| UI Components  | Custom, ShadCN, Lucide Icons              |
+| Data Layer     | LocalStorage (temporary)                  |
+| Types          | TypeScript with strict mode               |
+| Fonts          | [Jost](https://fonts.google.com/specimen/Jost) via Figma spec |
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+  ├── components/
+  │   ├── feedback/
+  │   ├── roadmap/
+  │   └── shared/
+  ├── context/
+  ├── hooks/
+  ├── store/
+  ├── types/
+  ├── utils/
+  └── pages/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✅ Current Status
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Module         | Status         |
+|----------------|----------------|
+| Global state   | ✅ Zustand complete |
+| Feedback board | ✅ Functional |
+| Sorting/filter | ✅ Done       |
+| Comments       | ✅ Nested replies supported |
+| Roadmap        | ✅ Drag-and-drop working |
+| Responsive UI  | ✅ Spec-matching |
+| Styling        | 🛠️ Final polish underway |
+| Tests          | 🚧 Coming soon |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🧠 Next Steps
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [ ] Wire up form validation
+- [ ] Write unit tests with Vitest or Jest
+- [ ] Add animation polish for roadmap
+- [ ] Add toast notifications
+- [ ] Connect to backend (optional)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🧑‍💻 Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Andrew Teece**  
+Frontend Developer — React, Next.js, TypeScript  
+[Portfolio](https://andrewteece.com) • [GitHub](https://github.com/andrewteece)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📄 License
+
+This project is open-source for learning purposes.  
+Original design by Frontend Mentor.

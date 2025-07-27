@@ -11,14 +11,22 @@ interface FeedbackState {
   feedback: Feedback[];
   sortOption: SortOption;
   selectedCategory: Category | 'all';
+
   setSelectedCategory: (category: Category | 'all') => void;
   setFeedback: (newFeedback: Feedback[]) => void;
   setSort: (option: SortOption) => void;
+
   toggleUpvote: (id: number) => void;
   addComment: (feedbackId: number, content: string) => void;
   addReply: (feedbackId: number, commentId: number, content: string) => void;
   updateStatus: (id: number, newStatus: Status) => void;
 }
+
+const CURRENT_USER = {
+  image: '/assets/user-images/image-suzanne.jpg',
+  name: 'Suzanne Chang',
+  username: 'upbeat1811',
+};
 
 export const useFeedbackStore = create<FeedbackState>((set) => ({
   feedback: [],
@@ -26,9 +34,7 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
   selectedCategory: 'all',
 
   setSelectedCategory: (category) => set({ selectedCategory: category }),
-
   setFeedback: (newFeedback) => set({ feedback: newFeedback }),
-
   setSort: (option) => set({ sortOption: option }),
 
   toggleUpvote: (id) =>
@@ -55,12 +61,9 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
                 {
                   id: Date.now(),
                   content,
-                  user: {
-                    image: '/assets/user-images/image-suzanne.jpg',
-                    name: 'Suzanne Chang',
-                    username: 'upbeat1811',
-                  },
-                } as Comment,
+                  user: CURRENT_USER,
+                  replies: [],
+                },
               ],
             }
           : f
@@ -73,7 +76,7 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
         f.id === feedbackId
           ? {
               ...f,
-              comments: (f.comments ?? []).map((c) =>
+              comments: f.comments.map((c) =>
                 c.id === commentId
                   ? {
                       ...c,
@@ -83,12 +86,8 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
                           id: Date.now(),
                           content,
                           replyingTo: c.user.username,
-                          user: {
-                            image: '/assets/user-images/image-suzanne.jpg',
-                            name: 'Suzanne Chang',
-                            username: 'upbeat1811',
-                          },
-                        } as Comment,
+                          user: CURRENT_USER,
+                        },
                       ],
                     }
                   : c
