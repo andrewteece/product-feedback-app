@@ -17,6 +17,7 @@ interface FeedbackState {
   toggleUpvote: (id: number) => void;
   addComment: (feedbackId: number, content: string) => void;
   addReply: (feedbackId: number, commentId: number, content: string) => void;
+  updateStatus: (id: number, newStatus: Status) => void;
 }
 
 export const useFeedbackStore = create<FeedbackState>((set) => ({
@@ -59,7 +60,7 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
                     name: 'Suzanne Chang',
                     username: 'upbeat1811',
                   },
-                },
+                } as Comment,
               ],
             }
           : f
@@ -87,13 +88,20 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
                             name: 'Suzanne Chang',
                             username: 'upbeat1811',
                           },
-                        },
+                        } as Comment,
                       ],
                     }
                   : c
               ),
             }
           : f
+      ),
+    })),
+
+  updateStatus: (id, newStatus) =>
+    set((state) => ({
+      feedback: state.feedback.map((f) =>
+        f.id === id ? { ...f, status: newStatus } : f
       ),
     })),
 }));

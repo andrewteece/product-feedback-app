@@ -1,19 +1,45 @@
-export type Category = 'ui' | 'ux' | 'enhancement' | 'bug' | 'feature';
+// Status types and constants
 export type Status = 'suggestion' | 'planned' | 'in-progress' | 'live';
-export type FilterableCategory = Category | 'all';
 
-export type SortOption =
-  | 'most-upvotes'
-  | 'least-upvotes'
-  | 'most-comments'
-  | 'least-comments';
+export interface User {
+  image: string;
+  name: string;
+  username: string;
+}
 
-export const SORT_LABELS: Record<SortOption, string> = {
-  'most-upvotes': 'Most Upvotes',
-  'least-upvotes': 'Least Upvotes',
-  'most-comments': 'Most Comments',
-  'least-comments': 'Least Comments',
+export const STATUS_VALUES: Status[] = [
+  'suggestion',
+  'planned',
+  'in-progress',
+  'live',
+];
+
+export const STATUS_LABELS: Record<Status, string> = {
+  suggestion: 'Suggestion',
+  planned: 'Planned',
+  'in-progress': 'In Progress',
+  live: 'Live',
 };
+
+export const STATUS_COLORS: Record<Status, string> = {
+  suggestion: 'violet',
+  planned: 'pink',
+  'in-progress': 'orange',
+  live: 'teal',
+};
+
+export const DEFAULT_STATUS: Status = 'suggestion';
+
+// Category types and constants
+export type Category = 'feature' | 'ui' | 'ux' | 'enhancement' | 'bug';
+
+export const CATEGORY_VALUES: Category[] = [
+  'feature',
+  'ui',
+  'ux',
+  'enhancement',
+  'bug',
+];
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   feature: 'Feature',
@@ -23,14 +49,18 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   bug: 'Bug',
 };
 
+export const DEFAULT_CATEGORY: Category = 'feature';
+
+// Comment and Feedback types
 export interface Comment {
   id: number;
   content: string;
   user: {
+    image: string;
     name: string;
     username: string;
-    image: string;
   };
+  replyingTo?: string;
   replies?: Comment[];
 }
 
@@ -45,32 +75,27 @@ export interface Feedback {
   comments?: Comment[];
 }
 
-export const STATUS_LABELS: Record<Status, string> = {
-  suggestion: 'Suggestion',
-  planned: 'Planned',
-  'in-progress': 'In-Progress',
-  live: 'Live',
-};
+export interface Reply {
+  id: number;
+  content: string;
+  replyingTo: string;
+  user: {
+    image: string;
+    name: string;
+    username: string;
+  };
+}
 
-export const DEFAULT_STATUS: Status = 'suggestion';
+// Sorting options
+export type SortOption =
+  | 'most-upvotes'
+  | 'least-upvotes'
+  | 'most-comments'
+  | 'least-comments';
 
-export const STATUS_DESCRIPTIONS: Record<Status, string> = {
-  suggestion: 'Ideas awaiting feedback',
-  planned: 'Ideas prioritized for research',
-  'in-progress': 'Currently being developed',
-  live: 'Released features',
-};
-
-export const STATUS_COLORS: Record<Status, string> = {
-  suggestion: 'gray',
-  planned: 'var(--status-planned)',
-  'in-progress': 'var(--status-inprogress)',
-  live: 'var(--status-live)',
-};
-
-export const STATUS_VALUES: Status[] = [
-  'suggestion',
-  'planned',
-  'in-progress',
-  'live',
+export const SORT_OPTIONS: SortOption[] = [
+  'most-upvotes',
+  'least-upvotes',
+  'most-comments',
+  'least-comments',
 ];
