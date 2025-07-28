@@ -1,24 +1,39 @@
-import { type Config } from 'tailwindcss';
+// tailwind.config.ts
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: ['./src/**/*.{ts,tsx}'],
+  darkMode: 'class',
+  content: ['./src/**/*.{ts,tsx}', './pages/**/*.{ts,tsx}'],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Jost', 'sans-serif'],
-      },
       colors: {
-        primary: '#AD1FEA',
-        'primary-hover': '#C75AF6',
-        accent: '#F49F85',
-        planned: '#F49F85',
-        inprogress: '#AD1FEA',
-        live: '#62BCFA',
-        'text-primary': '#3A4374',
-        'text-muted': '#647196',
-        'bg-page': '#F7F8FD',
-        'bg-card': '#FFFFFF',
-        'border-card': '#CDD2EE',
+        text: {
+          primary: 'var(--text-primary)',
+          muted: 'var(--text-muted)',
+        },
+        bg: {
+          page: 'var(--bg-page)',
+          card: 'var(--bg-card)',
+        },
+        border: {
+          header: 'var(--border-header)',
+          card: 'var(--border-card)',
+        },
+        button: {
+          primary: 'var(--btn-primary)',
+          hover: 'var(--btn-primary-hover)',
+        },
+        status: {
+          planned: 'var(--status-planned)',
+          inprogress: 'var(--status-inprogress)',
+          live: 'var(--status-live)',
+        },
+        badge: {
+          bg: 'var(--badge-bg)',
+        },
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'sans-serif'],
       },
     },
   },

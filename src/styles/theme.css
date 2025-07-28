@@ -2,7 +2,8 @@
 
 @layer base {
   :root {
-    /* Font already set in Tailwind config: font-sans -> Jost */
+    /* Font */
+    --font-sans: 'Jost', sans-serif;
 
     /* Text */
     --text-primary: #3a4374;
@@ -16,20 +17,20 @@
     --btn-primary: #ad1fea;
     --btn-primary-hover: #c75af6;
 
-    /* Status tags */
+    /* Status Colors */
     --status-planned: #f49f85;
     --status-inprogress: #ad1fea;
     --status-live: #62bcfa;
 
     /* Borders */
-    --border-header: #e5e5e5;
-    --border-card: #cdd2ee;
+    --border-header: #f2f4ff;
+    --border-card: #e1e3ea;
 
-    /* Badge */
+    /* Badges */
     --badge-bg: #f2f4ff;
   }
 
-  :root.dark {
+  .dark {
     /* Text */
     --text-primary: #ffffff;
     --text-muted: #cdd2ee;
@@ -42,7 +43,7 @@
     --btn-primary: #ad1fea;
     --btn-primary-hover: #c75af6;
 
-    /* Status tags */
+    /* Status Colors */
     --status-planned: #f49f85;
     --status-inprogress: #ad1fea;
     --status-live: #62bcfa;
@@ -51,7 +52,7 @@
     --border-header: #3b3b3b;
     --border-card: #3b3f51;
 
-    /* Badge */
+    /* Badges */
     --badge-bg: #2c2f3f;
   }
 }

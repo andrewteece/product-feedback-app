@@ -1,12 +1,12 @@
 'use client';
 
 import { useDroppable } from '@dnd-kit/core';
-import type { Feedback, Status } from '@/types/feedback';
-import DraggableCard from './DraggableCard';
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import DraggableCard from './DraggableCard';
+import type { Feedback, Status } from '@/types/feedback';
 
 type Props = {
   status: Exclude<Status, 'suggestion'>;
@@ -17,17 +17,17 @@ const statusMeta = {
   planned: {
     title: 'Planned',
     description: 'Ideas prioritized for research',
-    color: 'bg-[#F49F85]',
+    color: 'bg-[var(--status-planned)]',
   },
   'in-progress': {
     title: 'In-Progress',
     description: 'Currently being developed',
-    color: 'bg-[#AD1FEA]',
+    color: 'bg-[var(--status-inprogress)]',
   },
   live: {
     title: 'Live',
     description: 'Released features',
-    color: 'bg-[#62BCFA]',
+    color: 'bg-[var(--status-live)]',
   },
 } as const;
 
@@ -36,13 +36,15 @@ export default function DroppableColumn({ status, items }: Props) {
   const meta = statusMeta[status];
 
   return (
-    <section>
+    <section className='w-full'>
       {/* Heading */}
-      <div className='mb-4'>
-        <h2 className='text-lg font-bold text-[#3A4374] dark:text-white'>
+      <div className='mb-6'>
+        <h2 className='text-[18px] font-bold text-[var(--text-primary)] dark:text-white'>
           {meta.title} ({items.length})
         </h2>
-        <p className='text-sm text-[#647196] mb-2'>{meta.description}</p>
+        <p className='text-sm text-[var(--text-muted)] mb-4'>
+          {meta.description}
+        </p>
         <div className={`h-1 w-full rounded-full ${meta.color}`} />
       </div>
 

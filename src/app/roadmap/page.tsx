@@ -56,13 +56,15 @@ export default function RoadmapPage() {
       <div className='flex flex-col md:flex-row items-center justify-between bg-indigo-900 rounded-xl p-4 md:p-6 mb-12 gap-4'>
         <Link
           href='/'
-          className='text-white font-semibold flex items-center gap-2'
+          className='text-[var(--text-on-primary)] font-semibold flex items-center gap-2'
         >
           <ArrowLeft className='w-4 h-4' /> Go Back
         </Link>
-        <h1 className='text-white text-xl font-bold'>Roadmap</h1>
+        <h1 className='text-xl font-bold text-[var(--text-on-primary)]'>
+          Roadmap
+        </h1>
         <Link href='/new'>
-          <Button className='bg-fuchsia-500 hover:bg-fuchsia-600 text-white'>
+          <Button className='bg-[var(--button-primary)] hover:bg-[var(--button-primary-hover)] text-[var(--text-on-primary)]'>
             + Add Feedback
           </Button>
         </Link>
