@@ -17,17 +17,17 @@ const statusMeta = {
   planned: {
     title: 'Planned',
     description: 'Ideas prioritized for research',
-    color: 'bg-[var(--status-planned)]',
+    color: 'bg-status-planned',
   },
   'in-progress': {
     title: 'In-Progress',
     description: 'Currently being developed',
-    color: 'bg-[var(--status-inprogress)]',
+    color: 'bg-status-inprogress',
   },
   live: {
     title: 'Live',
     description: 'Released features',
-    color: 'bg-[var(--status-live)]',
+    color: 'bg-status-live',
   },
 } as const;
 
@@ -39,12 +39,10 @@ export default function DroppableColumn({ status, items }: Props) {
     <section className='w-full'>
       {/* Heading */}
       <div className='mb-6'>
-        <h2 className='text-[18px] font-bold text-[var(--text-primary)] dark:text-white'>
-          {meta.title} ({items.length})
+        <h2 className='text-[18px] font-bold text-text-primary dark:text-white'>
+          {meta.title} <span className='text-text-muted'>({items.length})</span>
         </h2>
-        <p className='text-sm text-[var(--text-muted)] mb-4'>
-          {meta.description}
-        </p>
+        <p className='text-sm text-text-muted mb-4'>{meta.description}</p>
         <div className={`h-1 w-full rounded-full ${meta.color}`} />
       </div>
 

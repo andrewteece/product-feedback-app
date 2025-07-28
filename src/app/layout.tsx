@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import { Jost } from 'next/font/google';
-import Header from '@/components/layout/Header';
+
 import { AppProvider } from '@/components/providers/AppProvider';
 
 const jost = Jost({
@@ -24,8 +24,7 @@ export default function RootLayout({
     <html lang='en' className='bg-[var(--bg-page)] text-[var(--text-primary)]'>
       <body className={`${jost.className} min-h-screen`}>
         <AppProvider>
-          <Header />
-          <main className='max-w-3xl mx-auto px-4 py-8'>{children}</main>
+          <main className='container mx-auto'>{children}</main>
         </AppProvider>
       </body>
     </html>

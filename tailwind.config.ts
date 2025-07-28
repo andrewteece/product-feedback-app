@@ -3,7 +3,11 @@ import type { Config } from 'tailwindcss';
 
 const config: Config = {
   darkMode: 'class',
-  content: ['./src/**/*.{ts,tsx}', './pages/**/*.{ts,tsx}'],
+  content: [
+    './src/**/*.{ts,tsx}',
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+  ],
   theme: {
     extend: {
       colors: {
@@ -34,6 +38,15 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'sans-serif'],
+      },
+
+      container: {
+        center: true,
+        padding: '1rem',
+        screens: {
+          DEFAULT: '100%',
+          lg: '980px',
+        },
       },
     },
   },
