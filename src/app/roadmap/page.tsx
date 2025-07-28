@@ -1,26 +1,22 @@
 'use client';
 
-import { useFeedbackStore } from '@/store/feedbackStore';
-import type { Status as AllStatus } from '@/types/feedback';
 import { useEffect, useState } from 'react';
-import DraggableCard from '@/components/feedback/DraggableCard';
+import { useFeedbackStore } from '@/store/feedbackStore';
 import {
   DndContext,
   DragEndEvent,
-  closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
+  closestCenter,
 } from '@dnd-kit/core';
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
 import DroppableColumn from '@/components/feedback/DroppableColumn';
+import { Status } from '@/types/feedback';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
-// Narrow the type for Roadmap-specific use (exclude 'suggestion')
-type RoadmapStatus = Exclude<AllStatus, 'suggestion'>;
-
+type RoadmapStatus = Exclude<Status, 'suggestion'>;
 const columns: RoadmapStatus[] = ['planned', 'in-progress', 'live'];
 
 export default function RoadmapPage() {
@@ -55,9 +51,24 @@ export default function RoadmapPage() {
   };
 
   return (
-    <div className='p-4 md:p-6'>
-      <h1 className='text-2xl font-bold mb-6'>Roadmap</h1>
+    <main className='p-4 sm:p-6 md:p-10'>
+      {/* Top Navigation Header */}
+      <div className='flex flex-col md:flex-row items-center justify-between bg-indigo-900 rounded-xl p-4 md:p-6 mb-12 gap-4'>
+        <Link
+          href='/'
+          className='text-white font-semibold flex items-center gap-2'
+        >
+          <ArrowLeft className='w-4 h-4' /> Go Back
+        </Link>
+        <h1 className='text-white text-xl font-bold'>Roadmap</h1>
+        <Link href='/new'>
+          <Button className='bg-fuchsia-500 hover:bg-fuchsia-600 text-white'>
+            + Add Feedback
+          </Button>
+        </Link>
+      </div>
 
+      {/* Roadmap Columns */}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -69,23 +80,10 @@ export default function RoadmapPage() {
               key={status}
               status={status}
               items={columnData[status]}
-            >
-              <SortableContext
-                items={columnData[status]}
-                strategy={verticalListSortingStrategy}
-              >
-                {columnData[status].length > 0 ? (
-                  columnData[status].map((item) => (
-                    <DraggableCard key={item.id} feedback={item} />
-                  ))
-                ) : (
-                  <p className='text-sm text-muted italic'>No feedback yet.</p>
-                )}
-              </SortableContext>
-            </DroppableColumn>
+            />
           ))}
         </div>
       </DndContext>
-    </div>
+    </main>
   );
 }

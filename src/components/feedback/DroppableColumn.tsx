@@ -1,63 +1,59 @@
 'use client';
 
-import { Status } from '@/types/feedback';
 import { useDroppable } from '@dnd-kit/core';
-import clsx from 'clsx';
-import { PropsWithChildren } from 'react';
+import type { Feedback, Status } from '@/types/feedback';
+import DraggableCard from './DraggableCard';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
-interface Props extends PropsWithChildren {
-  status: Status;
-  items: unknown[];
-}
-
-const statusLabels: Record<Status, string> = {
-  suggestion: 'Suggestion',
-  planned: 'Planned',
-  'in-progress': 'In-Progress',
-  live: 'Live',
+type Props = {
+  status: Exclude<Status, 'suggestion'>;
+  items: Feedback[];
 };
 
-const statusDescriptions: Record<Status, string> = {
-  suggestion: '',
-  planned: 'Ideas prioritized for research',
-  'in-progress': 'Currently being developed',
-  live: 'Released features',
-};
+const statusMeta = {
+  planned: {
+    title: 'Planned',
+    description: 'Ideas prioritized for research',
+    color: 'bg-[#F49F85]',
+  },
+  'in-progress': {
+    title: 'In-Progress',
+    description: 'Currently being developed',
+    color: 'bg-[#AD1FEA]',
+  },
+  live: {
+    title: 'Live',
+    description: 'Released features',
+    color: 'bg-[#62BCFA]',
+  },
+} as const;
 
-const statusColors: Record<Status, string> = {
-  suggestion: 'border-gray-300',
-  planned: 'border-[#F49F85]',
-  'in-progress': 'border-[#AD1FEA]',
-  live: 'border-[#62BCFA]',
-};
-
-export default function DroppableColumn({ status, items, children }: Props) {
-  const { setNodeRef, isOver } = useDroppable({ id: status });
+export default function DroppableColumn({ status, items }: Props) {
+  const { setNodeRef } = useDroppable({ id: status });
+  const meta = statusMeta[status];
 
   return (
-    <div>
+    <section>
+      {/* Heading */}
       <div className='mb-4'>
-        <h2 className='text-lg font-bold text-[var(--text-primary)] capitalize'>
-          {statusLabels[status]} ({items.length})
+        <h2 className='text-lg font-bold text-[#3A4374] dark:text-white'>
+          {meta.title} ({items.length})
         </h2>
-        {status !== 'suggestion' && (
-          <p className='text-sm text-[var(--text-muted)]'>
-            {statusDescriptions[status]}
-          </p>
-        )}
+        <p className='text-sm text-[#647196] mb-2'>{meta.description}</p>
+        <div className={`h-1 w-full rounded-full ${meta.color}`} />
       </div>
 
-      <div
-        ref={setNodeRef}
-        className={clsx(
-          'min-h-[300px] flex flex-col gap-4 p-4 rounded-lg transition',
-          'bg-[var(--bg-card)] border-t-4',
-          isOver ? 'ring-2 ring-[var(--btn-primary)]' : '',
-          statusColors[status]
-        )}
-      >
-        {children}
+      {/* Cards */}
+      <div ref={setNodeRef} className='flex flex-col gap-6'>
+        <SortableContext items={items} strategy={verticalListSortingStrategy}>
+          {items.map((feedback) => (
+            <DraggableCard key={feedback.id} feedback={feedback} />
+          ))}
+        </SortableContext>
       </div>
-    </div>
+    </section>
   );
 }
