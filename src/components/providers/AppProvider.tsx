@@ -61,13 +61,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         status: (() => {
           switch (fb.status.toLowerCase()) {
             case 'planned':
-              return Status.Planned;
+              return 'planned';
             case 'in-progress':
-              return Status.InProgress;
+              return 'in-progress';
             case 'live':
-              return Status.Live;
+              return 'live';
             default:
-              return Status.Suggestion;
+              return 'suggestion';
           }
         })(),
         upvotes: fb.upvotes,

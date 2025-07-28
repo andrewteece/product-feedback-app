@@ -10,6 +10,14 @@ interface Props {
   feedback: Feedback;
 }
 
+const categoryColors: Record<string, string> = {
+  feature: 'bg-[#E0F1FE] text-[#4661E6]',
+  ui: 'bg-[#FCEADE] text-[#D73737]',
+  ux: 'bg-[#EDEFF7] text-[#373F68]',
+  enhancement: 'bg-[#F4F0FF] text-[#AD1FEA]',
+  bug: 'bg-[#FCD8D8] text-[#D73737]',
+};
+
 export default function DraggableCard({ feedback }: Props) {
   const {
     attributes,
@@ -26,6 +34,10 @@ export default function DraggableCard({ feedback }: Props) {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  const categoryStyle =
+    categoryColors[feedback.category.toLowerCase()] ??
+    'bg-[var(--badge-bg)] text-[var(--text-primary)]';
+
   return (
     <div
       ref={setNodeRef}
@@ -33,17 +45,24 @@ export default function DraggableCard({ feedback }: Props) {
       {...listeners}
       style={style}
       className={clsx(
-        'bg-[var(--bg-card)] p-4 rounded-md shadow-sm border',
-        'cursor-grab select-none',
-        isDragging && 'border-dashed'
+        'bg-[var(--bg-card)] p-5 rounded-lg shadow-md border border-[var(--border-card)]',
+        'cursor-grab select-none transition hover:shadow-lg',
+        isDragging && 'border-dashed opacity-50'
       )}
     >
-      <p className='text-sm text-[var(--text-secondary)] capitalize mb-2'>
+      <span
+        className={clsx(
+          'inline-block text-xs font-medium capitalize px-3 py-1 rounded-full mb-2 w-fit',
+          categoryStyle
+        )}
+      >
         {feedback.category}
-      </p>
+      </span>
+
       <h3 className='text-base font-semibold text-[var(--text-primary)] mb-2'>
         {feedback.title}
       </h3>
+
       <p className='text-sm text-[var(--text-muted)] mb-4'>
         {feedback.description}
       </p>
