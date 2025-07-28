@@ -4,32 +4,22 @@ export type Status = 'suggestion' | 'planned' | 'in-progress' | 'live';
 export type Category = 'feature' | 'ui' | 'ux' | 'enhancement' | 'bug';
 
 export interface User {
-  image: string;
   name: string;
   username: string;
+  avatarUrl: string;
 }
 
 export interface Reply {
-  id: number;
   content: string;
   replyingTo: string;
-  user: {
-    image: string;
-    name: string;
-    username: string;
-  };
+  user: User;
 }
 
 export interface Comment {
   id: number;
   content: string;
-  user: {
-    image: string;
-    name: string;
-    username: string;
-  };
-  replyingTo?: string;
-  replies?: Comment[];
+  user: User;
+  replies?: Reply[];
 }
 
 export interface Feedback {

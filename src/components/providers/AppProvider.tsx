@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useFeedbackStore } from '@/store/feedbackStore';
-import { Feedback, Status, Category, Comment } from '@/types/feedback';
+import { Feedback, Category, Comment } from '@/types/feedback';
 import data from '@/lib/data/data.json';
 
 interface RawUser {

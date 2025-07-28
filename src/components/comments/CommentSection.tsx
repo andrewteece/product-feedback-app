@@ -45,7 +45,7 @@ export default function CommentSection({
           >
             <div className='flex gap-4'>
               <Image
-                src={comment.user.image}
+                src={comment.user.avatarUrl}
                 alt={comment.user.name}
                 width={40}
                 height={40}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useFeedbackStore } from '@/store/feedbackStore';
-import { Status } from '@/types/feedback';
+import type { Status as AllStatus } from '@/types/feedback';
 import { useEffect, useState } from 'react';
 import DraggableCard from '@/components/feedback/DraggableCard';
 import {
@@ -18,17 +18,20 @@ import {
 } from '@dnd-kit/sortable';
 import DroppableColumn from '@/components/feedback/DroppableColumn';
 
-const columns: Status[] = ['planned', 'in-progress', 'live'];
+// Narrow the type for Roadmap-specific use (exclude 'suggestion')
+type RoadmapStatus = Exclude<AllStatus, 'suggestion'>;
+
+const columns: RoadmapStatus[] = ['planned', 'in-progress', 'live'];
 
 export default function RoadmapPage() {
   const { feedback, updateStatus } = useFeedbackStore();
-  const [columnData, setColumnData] = useState<Record<Status, typeof feedback>>(
-    {
-      planned: [],
-      'in-progress': [],
-      live: [],
-    }
-  );
+  const [columnData, setColumnData] = useState<
+    Record<RoadmapStatus, typeof feedback>
+  >({
+    planned: [],
+    'in-progress': [],
+    live: [],
+  });
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -43,7 +46,7 @@ export default function RoadmapPage() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const activeId = event.active.id.toString();
-    const overId = event.over?.id?.toString() as Status;
+    const overId = event.over?.id?.toString() as RoadmapStatus;
 
     const dragged = feedback.find((f) => f.id.toString() === activeId);
     if (dragged && dragged.status !== overId) {
