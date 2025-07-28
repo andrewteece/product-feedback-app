@@ -39,7 +39,7 @@ export default function DroppableColumn({ status, items }: Props) {
     <section className='w-full'>
       {/* Heading */}
       <div className='mb-6'>
-        <h2 className='text-[18px] font-bold text-text-primary dark:text-white'>
+        <h2 className='text-[18px] font-bold text-primary'>
           {meta.title} <span className='text-text-muted'>({items.length})</span>
         </h2>
         <p className='text-sm text-text-muted mb-4'>{meta.description}</p>
