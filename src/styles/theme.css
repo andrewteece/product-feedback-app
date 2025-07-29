@@ -1,59 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&family=Jost:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-@layer base {
-  :root {
-    /* Font */
-    --font-sans: 'Jost', sans-serif;
+@theme {
+  /* Font */
+  --font-sans: 'Jost', sans-serif;
 
-    /* Text */
-    --text-primary: hsl(231 33% 34%);
-    --text-muted: hsl(226 14% 45%);
+  /* Text */
+  --text-primary: hsl(231 33% 34%);
+  --text-muted: hsl(226 14% 45%);
 
-    /* Backgrounds */
-    --bg-page: hsl(231 100% 98%);
-    --bg-card: hsl(0 0% 100%);
-    --bg-header: hsl(231 33% 34%);
+  /* Backgrounds */
+  --bg-page: hsl(231 100% 98%);
+  --bg-card: hsl(0 0% 100%);
+  --bg-header: hsl(231 33% 34%);
 
-    /* Buttons */
-    --btn-primary: hsl(276 100% 72%);
-    --btn-primary-hover: hsl(284 90% 68%);
+  /* Buttons */
+  --btn-primary: hsl(276 100% 72%);
+  --btn-primary-hover: hsl(284 90% 68%);
 
-    /* Status Colors */
-    --status-planned: hsl(17 88% 75%);
-    --status-inprogress: hsl(276 100% 72%);
-    --status-live: hsl(204 90% 68%);
+  /* Status Colors */
+  --status-planned: hsl(17 88% 75%);
+  --status-inprogress: hsl(276 100% 72%);
+  --status-live: hsl(204 90% 68%);
 
-    /* Borders */
-    --border-header: hsl(231 100% 97%);
-    --border-card: hsl(225 14% 89%);
+  /* Borders */
+  --border-header: hsl(231 100% 97%);
+  --border-card: hsl(225 14% 89%);
 
-    /* Badges */
-    --badge-bg: hsl(231 100% 97%);
-  }
+  /* Badges */
+  --badge-bg: hsl(231 100% 97%);
+}
 
-  .dark {
-    /* Text */
-    --text-primary: hsl(0 0% 100%);
-    --text-muted: hsl(229 53% 85%);
+.dark {
+  /* Text */
+  --text-primary: hsl(0 0% 100%);
+  --text-muted: hsl(229 53% 85%);
 
-    /* Backgrounds */
-    --bg-page: hsl(222 27% 10%);
-    --bg-card: hsl(217 28% 17%);
+  /* Backgrounds */
+  --bg-page: hsl(222 27% 10%);
+  --bg-card: hsl(217 28% 17%);
 
-    /* Buttons */
-    --btn-primary: hsl(276 100% 72%);
-    --btn-primary-hover: hsl(284 90% 68%);
+  /* Buttons */
+  --btn-primary: hsl(276 100% 72%);
+  --btn-primary-hover: hsl(284 90% 68%);
 
-    /* Status Colors */
-    --status-planned: hsl(17 88% 75%);
-    --status-inprogress: hsl(276 100% 72%);
-    --status-live: hsl(204 90% 68%);
+  /* Status Colors */
+  --status-planned: hsl(17 88% 75%);
+  --status-inprogress: hsl(276 100% 72%);
+  --status-live: hsl(204 90% 68%);
 
-    /* Borders */
-    --border-header: hsl(240 0% 23%);
-    --border-card: hsl(230 14% 27%);
+  /* Borders */
+  --border-header: hsl(240 0% 23%);
+  --border-card: hsl(230 14% 27%);
 
-    /* Badges */
-    --badge-bg: hsl(230 18% 21%);
-  }
+  /* Badges */
+  --badge-bg: hsl(230 18% 21%);
 }
