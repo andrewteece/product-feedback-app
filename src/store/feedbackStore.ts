@@ -1,11 +1,5 @@
 import { create } from 'zustand';
-import type {
-  Feedback,
-  Category,
-  SortOption,
-  Status,
-  Comment,
-} from '@/types/feedback';
+import type { Feedback, Category, SortOption, Status } from '@/types/feedback';
 
 interface FeedbackState {
   feedback: Feedback[];
@@ -14,6 +8,7 @@ interface FeedbackState {
 
   setSelectedCategory: (category: Category | 'all') => void;
   setFeedback: (newFeedback: Feedback[]) => void;
+
   setSort: (option: SortOption) => void;
 
   toggleUpvote: (id: number) => void;
@@ -23,7 +18,7 @@ interface FeedbackState {
 }
 
 const CURRENT_USER = {
-  image: '/assets/user-images/image-suzanne.jpg',
+  avatarUrl: '/assets/user-images/image-suzanne.jpg',
   name: 'Suzanne Chang',
   username: 'upbeat1811',
 };
@@ -38,8 +33,9 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
   setSort: (option) => set({ sortOption: option }),
 
   toggleUpvote: (id) =>
-    set((state) => ({
-      feedback: state.feedback.map((f) =>
+    set((state) => {
+      console.log('[Zustand] toggleUpvote for ID:', id);
+      const updated = state.feedback.map((f) =>
         f.id === id
           ? {
               ...f,
@@ -47,8 +43,9 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
               upvoted: !f.upvoted,
             }
           : f
-      ),
-    })),
+      );
+      return { feedback: updated };
+    }),
 
   addComment: (feedbackId, content) =>
     set((state) => ({
@@ -72,29 +69,31 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
 
   addReply: (feedbackId, commentId, content) =>
     set((state) => ({
-      feedback: state.feedback.map((f) =>
-        f.id === feedbackId
-          ? {
-              ...f,
-              comments: f.comments.map((c) =>
-                c.id === commentId
-                  ? {
-                      ...c,
-                      replies: [
-                        ...(c.replies ?? []),
-                        {
-                          id: Date.now(),
-                          content,
-                          replyingTo: c.user.username,
-                          user: CURRENT_USER,
-                        },
-                      ],
-                    }
-                  : c
-              ),
-            }
-          : f
-      ),
+      feedback: state.feedback.map((f) => {
+        if (f.id !== feedbackId) return f;
+
+        const updatedComments = f.comments?.map((c) => {
+          if (c.id !== commentId) return c;
+
+          return {
+            ...c,
+            replies: [
+              ...(c.replies ?? []),
+              {
+                id: Date.now(),
+                content,
+                replyingTo: c.user.username,
+                user: CURRENT_USER,
+              },
+            ],
+          };
+        });
+
+        return {
+          ...f,
+          comments: updatedComments ?? [],
+        };
+      }),
     })),
 
   updateStatus: (id, newStatus) =>

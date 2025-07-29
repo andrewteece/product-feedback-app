@@ -3,9 +3,9 @@
 import { ReactNode, useEffect } from 'react';
 import { useFeedbackStore } from '@/store/feedbackStore';
 import data from '@/lib/data/data.json';
-import type { Category, Status } from '@/types/feedback';
 import { FeedbackDataSchema } from '@/lib/feedbackSchema';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import type { Category, Status } from '@/types/feedback';
 
 interface AppProviderProps {
   children: ReactNode;
@@ -27,25 +27,27 @@ export default function AppProvider({ children }: AppProviderProps) {
       }
     }
 
-    // ✅ Use Zod to validate and normalize the mock data
     const parsed = FeedbackDataSchema.parse(data);
 
-    // ✅ Add `upvoted: false` to each feedback item
+    // ✅ All structure is already correct thanks to Zod — just extend with `upvoted`
     const normalized = parsed.productRequests.map((f) => ({
       ...f,
       upvoted: false,
       category: f.category as Category,
       status: f.status as Status,
+      comments:
+        f.comments?.map((c) => ({
+          ...c,
+          replies: c.replies ?? [],
+        })) ?? [],
     }));
 
     setFeedback(normalized);
   }, [setFeedback]);
 
   return (
-    <>
-      <NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
-        {children}
-      </NextThemesProvider>
-    </>
+    <NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
+      {children}
+    </NextThemesProvider>
   );
 }

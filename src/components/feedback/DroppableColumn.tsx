@@ -48,10 +48,15 @@ export default function DroppableColumn({ status, items }: Props) {
 
       {/* Cards */}
       <div ref={setNodeRef} className='flex flex-col gap-6'>
-        <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          {items.map((feedback) => (
-            <DraggableCard key={feedback.id} feedback={feedback} />
-          ))}
+        <SortableContext
+          items={items.map((f) => f.id.toString())}
+          strategy={verticalListSortingStrategy}
+        >
+          {items
+            .filter((item) => item.status === status) //  extra safety
+            .map((feedback) => (
+              <DraggableCard key={feedback.id} feedback={feedback} />
+            ))}
         </SortableContext>
       </div>
     </section>

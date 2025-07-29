@@ -6,6 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 import { MessageSquare } from 'lucide-react';
 import ArrowUpIcon from '@/assets/icons/icon-arrow-up.svg';
+import { useFeedbackStore } from '@/store/feedbackStore'; // Zustand hook
 
 interface Props {
   feedback: Feedback;
@@ -33,13 +34,14 @@ export default function DraggableCard({ feedback }: Props) {
     isDragging,
   } = useSortable({ id: feedback.id.toString() });
 
+  const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote); // ✅ Zustand function
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
 
-  if (!feedback.status || feedback.status === 'suggestion') return null;
   const safeStatus = feedback.status as keyof typeof topBorderColorMap;
 
   return (
@@ -49,7 +51,7 @@ export default function DraggableCard({ feedback }: Props) {
       {...listeners}
       style={style}
       className={clsx(
-        'rounded-md bg-white  px-6 py-5 shadow-sm border transition',
+        'rounded-md bg-white px-6 py-5 shadow-sm border transition',
         'flex flex-col gap-3 justify-between',
         'border-[var(--border-card)]',
         isDragging && 'border-dashed opacity-50',
@@ -83,7 +85,18 @@ export default function DraggableCard({ feedback }: Props) {
         </span>
 
         <div className='flex items-center gap-4'>
-          <button className='flex items-center justify-center gap-2 rounded-md bg-white text-[var(--text-primary)] text-sm font-bold px-4 py-2 shadow-sm hover:brightness-95'>
+          <button
+            onClick={() => {
+              console.log('[UI] Toggling upvote for', feedback.id);
+              toggleUpvote(feedback.id);
+            }}
+            className={clsx(
+              'flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-bold shadow-sm transition hover:brightness-95',
+              feedback.upvoted
+                ? 'bg-[hsl(var(--color-primary))] text-white'
+                : 'bg-white text-[var(--text-primary)]'
+            )}
+          >
             <ArrowUpIcon className='w-3 h-3' />
             {feedback.upvotes}
           </button>
