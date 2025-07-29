@@ -1,112 +1,75 @@
 'use client';
 
+import { useFeedbackStore } from '@/store/feedbackStore';
 import { Feedback } from '@/types/feedback';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import clsx from 'clsx';
-import { MessageSquare } from 'lucide-react';
-import ArrowUpIcon from '@/assets/icons/icon-arrow-up.svg';
-import { useFeedbackStore } from '@/store/feedbackStore'; // Zustand hook
+import { GripVertical } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
-interface Props {
+type Props = {
   feedback: Feedback;
-}
-
-const topBorderColorMap = {
-  planned: 'border-t-[6px] border-t-[#F49F85]',
-  'in-progress': 'border-t-[6px] border-t-[#AD1FEA]',
-  live: 'border-t-[6px] border-t-[#62BCFA]',
-} as const;
-
-const statusColorMap = {
-  planned: 'bg-[#F49F85]',
-  'in-progress': 'bg-[#AD1FEA]',
-  live: 'bg-[#62BCFA]',
-} as const;
+};
 
 export default function DraggableCard({ feedback }: Props) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: feedback.id.toString() });
+  const liveFeedback = useFeedbackStore((s) =>
+    s.feedback.find((f) => f.id === feedback.id)
+  );
+  const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote);
 
-  const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote); // ✅ Zustand function
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: feedback.id.toString(),
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
   };
 
-  const safeStatus = feedback.status as keyof typeof topBorderColorMap;
+  if (!liveFeedback) return null;
+
+  console.log('[render] upvotes:', liveFeedback.id, liveFeedback.upvotes);
 
   return (
-    <div
+    <motion.div
+      layout
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       style={style}
-      className={clsx(
-        'rounded-md bg-white px-6 py-5 shadow-sm border transition',
-        'flex flex-col gap-3 justify-between',
-        'border-[var(--border-card)]',
-        isDragging && 'border-dashed opacity-50',
-        topBorderColorMap[safeStatus]
-      )}
+      className='rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900'
     >
-      {/* Status Label */}
-      <div className='flex items-center gap-2 text-sm text-[var(--text-muted)] font-medium'>
-        <span
-          className={clsx('h-2 w-2 rounded-full', statusColorMap[safeStatus])}
-        />
-        {feedback.status
-          ?.replace('-', ' ')
-          .replace(/\b\w/g, (c) => c.toUpperCase())}
+      <div className='flex items-start justify-between gap-4'>
+        <div>
+          <h3 className='text-base font-bold text-zinc-800 dark:text-zinc-100'>
+            {liveFeedback.title}
+          </h3>
+          <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+            {liveFeedback.description}
+          </p>
+        </div>
+
+        <button
+          onClick={() => toggleUpvote(liveFeedback.id)}
+          className={cn(
+            'flex flex-col items-center justify-center rounded-md px-2 py-1 text-sm font-semibold',
+            liveFeedback.upvoted
+              ? 'bg-blue-600 text-white'
+              : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'
+          )}
+        >
+          ▲<span>{liveFeedback.upvotes}</span>
+        </button>
       </div>
 
-      {/* Title + Description */}
-      <div className='flex flex-col gap-1.5'>
-        <h3 className='text-base font-bold text-[var(--text-primary)]'>
-          {feedback.title}
-        </h3>
-        <p className='text-sm text-[var(--text-muted)]'>
-          {feedback.description}
-        </p>
-      </div>
+      <div className='mt-4 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400'>
+        <span className='capitalize'>{liveFeedback.category}</span>
 
-      {/* Category + Footer */}
-      <div className='flex justify-between items-center mt-1'>
-        <span className='bg-[var(--badge-bg)] text-[var(--text-primary)] text-xs font-semibold px-3 py-1 rounded-full capitalize'>
-          {feedback.category}
-        </span>
-
-        <div className='flex items-center gap-4'>
-          <button
-            onClick={() => {
-              console.log('[UI] Toggling upvote for', feedback.id);
-              toggleUpvote(feedback.id);
-            }}
-            className={clsx(
-              'flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-bold shadow-sm transition hover:brightness-95',
-              feedback.upvoted
-                ? 'bg-[hsl(var(--color-primary))] text-white'
-                : 'bg-white text-[var(--text-primary)]'
-            )}
-          >
-            <ArrowUpIcon className='w-3 h-3' />
-            {feedback.upvotes}
-          </button>
-
-          <div className='flex items-center gap-1 text-sm font-semibold text-[var(--text-primary)]'>
-            <MessageSquare className='w-4 h-4' />
-            {feedback.comments?.length ?? 0}
-          </div>
+        <div className='flex items-center gap-2' {...attributes} {...listeners}>
+          <GripVertical className='h-4 w-4 opacity-50' />
+          Drag
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
