@@ -1,6 +1,6 @@
 # 🗳️ Product Feedback App
 
-A full-featured feedback board built with Next.js, Tailwind CSS, and Zustand — based on the [Frontend Mentor](https://www.frontendmentor.io/challenges/product-feedback-app-wv1gJVtYb) challenge. Users can submit feedback, upvote suggestions, comment and reply, and view the roadmap.
+A full-featured feedback board built with Next.js, Tailwind CSS, and Zustand. Users can submit feedback, upvote suggestions, comment and reply, and view the roadmap.
 
 ![Product Feedback App Preview](./public/preview.jpg)
 
