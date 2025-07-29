@@ -9,12 +9,10 @@ export default function RoadmapPage() {
   const feedback = useFeedbackStore((s) => s.feedback);
   const updateStatus = useFeedbackStore((s) => s.updateStatus);
 
-  // Group feedback into roadmap columns
   const planned = feedback.filter((f) => f.status === 'planned');
   const inProgress = feedback.filter((f) => f.status === 'in-progress');
   const live = feedback.filter((f) => f.status === 'live');
 
-  // Handle DnD status change
   function onDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!active || !over || active.id === over.id) return;
@@ -33,9 +31,27 @@ export default function RoadmapPage() {
 
       <DndContext onDragEnd={onDragEnd}>
         <div className='grid gap-6 md:grid-cols-3'>
-          <DroppableColumn status='planned' items={planned} />
-          <DroppableColumn status='in-progress' items={inProgress} />
-          <DroppableColumn status='live' items={live} />
+          <DroppableColumn
+            status='planned'
+            items={planned}
+            title='Planned'
+            subtitle='Ideas prioritized for research'
+            color='text-purple-600'
+          />
+          <DroppableColumn
+            status='in-progress'
+            items={inProgress}
+            title='In-Progress'
+            subtitle='Currently being developed'
+            color='text-orange-500'
+          />
+          <DroppableColumn
+            status='live'
+            items={live}
+            title='Live'
+            subtitle='Released features'
+            color='text-teal-500'
+          />
         </div>
       </DndContext>
     </main>

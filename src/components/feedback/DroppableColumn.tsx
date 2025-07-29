@@ -1,64 +1,46 @@
 'use client';
 
-import { useDroppable } from '@dnd-kit/core';
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { Feedback, Status } from '@/types/feedback';
+import { SortableContext } from '@dnd-kit/sortable';
 import DraggableCard from './DraggableCard';
-import type { Feedback, Status } from '@/types/feedback';
+import { cn } from '@/lib/utils';
 
 type Props = {
-  status: Exclude<Status, 'suggestion'>;
+  status: Status;
   items: Feedback[];
+  title: string;
+  subtitle: string;
+  color: string;
 };
 
-const statusMeta = {
-  planned: {
-    title: 'Planned',
-    description: 'Ideas prioritized for research',
-    color: 'bg-status-planned',
-  },
-  'in-progress': {
-    title: 'In-Progress',
-    description: 'Currently being developed',
-    color: 'bg-status-inprogress',
-  },
-  live: {
-    title: 'Live',
-    description: 'Released features',
-    color: 'bg-status-live',
-  },
-} as const;
-
-export default function DroppableColumn({ status, items }: Props) {
-  const { setNodeRef } = useDroppable({ id: status });
-  const meta = statusMeta[status];
+export default function DroppableColumn({
+  status,
+  items,
+  title,
+  subtitle,
+  color,
+}: Props) {
+  console.log('[DroppableColumn] status:', status);
 
   return (
-    <section className='w-full'>
-      {/* Heading */}
+    <div>
       <div className='mb-6'>
-        <h2 className='text-[18px] font-bold text-primary'>
-          {meta.title} <span className='text-text-muted'>({items.length})</span>
+        <h2 className={cn('text-lg font-bold', color)}>
+          {title}{' '}
+          <span className='text-zinc-500 dark:text-zinc-400'>
+            ({items.length})
+          </span>
         </h2>
-        <p className='text-sm text-text-muted mb-4'>{meta.description}</p>
-        <div className={`h-1 w-full rounded-full ${meta.color}`} />
+        <p className='text-sm text-zinc-500 dark:text-zinc-400'>{subtitle}</p>
       </div>
 
-      {/* Cards */}
-      <div ref={setNodeRef} className='flex flex-col gap-6'>
-        <SortableContext
-          items={items.map((f) => f.id.toString())}
-          strategy={verticalListSortingStrategy}
-        >
-          {items
-            .filter((item) => item.status === status) //  extra safety
-            .map((feedback) => (
-              <DraggableCard key={feedback.id} feedback={feedback} />
-            ))}
-        </SortableContext>
-      </div>
-    </section>
+      <SortableContext items={items.map((f) => f.id.toString())}>
+        <div className='space-y-4'>
+          {items.map((feedback) => (
+            <DraggableCard key={feedback.id} feedback={feedback} />
+          ))}
+        </div>
+      </SortableContext>
+    </div>
   );
 }
