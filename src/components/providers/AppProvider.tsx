@@ -1,48 +1,25 @@
 'use client';
 
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useFeedbackStore } from '@/store/feedbackStore';
-import { Feedback, Category, Comment } from '@/types/feedback';
 import data from '@/lib/data/data.json';
+import type { Category, Status } from '@/types/feedback';
+import { FeedbackDataSchema } from '@/lib/feedbackSchema';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
-interface RawUser {
-  name: string;
-  username: string;
-  image: string;
+interface AppProviderProps {
+  children: ReactNode;
 }
 
-interface RawReply {
-  content: string;
-  replyingTo: string;
-  user: RawUser;
-}
-
-interface RawComment {
-  id: number;
-  content: string;
-  user: RawUser;
-  replies?: RawReply[];
-}
-
-interface RawFeedback {
-  id: number;
-  title: string;
-  category: string;
-  upvotes: number;
-  status: string;
-  description: string;
-  comments?: RawComment[];
-}
-
-export function AppProvider({ children }: { children: React.ReactNode }) {
-  const setFeedback = useFeedbackStore((state) => state.setFeedback);
+export default function AppProvider({ children }: AppProviderProps) {
+  const setFeedback = useFeedbackStore((s) => s.setFeedback);
 
   useEffect(() => {
     const stored = localStorage.getItem('feedback');
 
     if (stored) {
       try {
-        const parsed = JSON.parse(stored) as Feedback[];
+        const parsed = JSON.parse(stored);
         setFeedback(parsed);
         return;
       } catch (err) {
@@ -50,53 +27,25 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // fallback to normalized data.json
-    const normalized: Feedback[] = data.productRequests.map(
-      (fb: RawFeedback) => ({
-        id: fb.id,
-        title: fb.title,
-        description: fb.description,
-        category: (fb.category.charAt(0).toUpperCase() +
-          fb.category.slice(1).toLowerCase()) as Category,
-        status: (() => {
-          switch (fb.status.toLowerCase()) {
-            case 'planned':
-              return 'planned';
-            case 'in-progress':
-              return 'in-progress';
-            case 'live':
-              return 'live';
-            default:
-              return 'suggestion';
-          }
-        })(),
-        upvotes: fb.upvotes,
-        upvoted: false,
-        comments: fb.comments?.map(
-          (comment): Comment => ({
-            id: comment.id,
-            content: comment.content,
-            user: {
-              name: comment.user.name,
-              username: comment.user.username,
-              avatarUrl: comment.user.image,
-            },
-            replies: comment.replies?.map((reply) => ({
-              content: reply.content,
-              replyingTo: reply.replyingTo,
-              user: {
-                name: reply.user.name,
-                username: reply.user.username,
-                avatarUrl: reply.user.image,
-              },
-            })),
-          })
-        ),
-      })
-    );
+    // ✅ Use Zod to validate and normalize the mock data
+    const parsed = FeedbackDataSchema.parse(data);
+
+    // ✅ Add `upvoted: false` to each feedback item
+    const normalized = parsed.productRequests.map((f) => ({
+      ...f,
+      upvoted: false,
+      category: f.category as Category,
+      status: f.status as Status,
+    }));
 
     setFeedback(normalized);
   }, [setFeedback]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
+        {children}
+      </NextThemesProvider>
+    </>
+  );
 }

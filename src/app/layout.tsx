@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import { Jost } from 'next/font/google';
 
-import { AppProvider } from '@/components/providers/AppProvider';
+import AppProvider from '@/components/providers/AppProvider';
 
 const jost = Jost({
   subsets: ['latin'],
