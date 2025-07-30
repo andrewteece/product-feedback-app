@@ -30,6 +30,9 @@
 
   --category-badge-bg: hsl(231, 100%, 97%);
   --category-badge-text: hsl(226, 14%, 45%);
+
+  --btn-upvote-hover: hsl(231, 100%, 94%); /* subtle hover shade */
+  --btn-primary-hover: hsl(284, 90%, 68%); /* vibrant hover for active */
 }
 
 .dark {
