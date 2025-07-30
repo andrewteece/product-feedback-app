@@ -2,16 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ThemeToogle, BackButton } from '@/components/ui';
+import { ThemeToggle, BackButton } from '@/components/ui';
+import LayoutWrapper from '@/components/layout/LayoutWrapper';
 
 export default function Header() {
   const pathname = usePathname();
-
   const isRoadmapPage = pathname.includes('roadmap');
 
   return (
-    <header className='bg-[var(--bg-header)] px-4 py-6 sm:px-6 md:px-10'>
-      <div className='mx-auto flex max-w-[1100px] items-center justify-between'>
+    <header className='bg-[var(--bg-header)]'>
+      <LayoutWrapper className='flex items-center justify-between py-6'>
         {isRoadmapPage ? (
           <div className='flex flex-col gap-2'>
             <BackButton />
@@ -26,7 +26,7 @@ export default function Header() {
         )}
 
         <div className='flex items-center gap-4'>
-          <ThemeToogle />
+          <ThemeToggle />
           <Link
             href='/new'
             className='rounded-lg bg-[var(--btn-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--btn-primary-hover)] transition'
@@ -34,7 +34,7 @@ export default function Header() {
             + Add Feedback
           </Link>
         </div>
-      </div>
+      </LayoutWrapper>
     </header>
   );
 }

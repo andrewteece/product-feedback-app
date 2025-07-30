@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { Jost } from 'next/font/google';
 import Header from '@/components/layout/Header';
 import AppProvider from '@/components/providers/AppProvider';
+import LayoutWrapper from '@/components/layout/LayoutWrapper';
 
 const jost = Jost({
   subsets: ['latin'],
@@ -25,7 +26,9 @@ export default function RootLayout({
       <body className={`${jost.className} min-h-screen transition-colors`}>
         <AppProvider>
           <Header />
-          <main className='mx-auto max-w-[1100px] px-4 py-12'>{children}</main>
+          <main className='py-12'>
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </main>
         </AppProvider>
       </body>
     </html>
