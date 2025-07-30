@@ -3,34 +3,31 @@
 import { Feedback, Status } from '@/types/feedback';
 import { SortableContext } from '@dnd-kit/sortable';
 import DraggableCard from './DraggableCard';
+import { statusMetaMap } from '@/lib/statusMeta';
 
 type Props = {
   status: Status;
   items: Feedback[];
-  title: string;
-  subtitle: string;
-};
 
-const statusColors: Record<Status, string> = {
-  suggestion: 'var(--status-planned)',
-  planned: 'var(--status-planned)',
-  'in-progress': 'var(--status-inprogress)',
-  live: 'var(--status-live)',
+  subtitle: string;
 };
 
 export default function DroppableColumn({
   status,
   items,
-  title,
+
   subtitle,
 }: Props) {
-  const color = statusColors[status];
+  const { textClass, dotClass, label } = statusMetaMap[status];
 
   return (
     <div>
       <div className='mb-6'>
-        <h2 className='text-lg font-bold' style={{ color }}>
-          {title}{' '}
+        <h2
+          className={`flex items-center gap-2 text-lg font-bold ${textClass}`}
+        >
+          <span className={`h-2 w-2 rounded-full ${dotClass}`} />
+          {label}{' '}
           <span className='text-[var(--text-muted)]'>({items.length})</span>
         </h2>
         <p className='text-sm text-[var(--text-muted)]'>{subtitle}</p>

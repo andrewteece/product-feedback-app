@@ -37,19 +37,16 @@ export default function RoadmapPage() {
           <DroppableColumn
             status='planned'
             items={planned}
-            title='Planned'
             subtitle='Ideas prioritized for research'
           />
           <DroppableColumn
             status='in-progress'
             items={inProgress}
-            title='In-Progress'
             subtitle='Currently being developed'
           />
           <DroppableColumn
             status='live'
             items={live}
-            title='Live'
             subtitle='Released features'
           />
         </div>
