@@ -17,11 +17,9 @@ export default function DroppableColumn({ status, items, subtitle }: Props) {
   return (
     <div>
       <header className='mb-6'>
-        <h2
-          className={`flex items-center gap-2 text-lg font-bold ${textClass}`}
-        >
+        <h2 className='flex items-center gap-2 text-base font-bold leading-snug'>
           <span className={`h-2 w-2 rounded-full ${dotClass}`} />
-          {label}{' '}
+          <span className={textClass}>{label}</span>
           <span className='text-[var(--text-muted)]'>({items.length})</span>
         </h2>
         <p className='text-sm text-[var(--text-muted)]'>{subtitle}</p>

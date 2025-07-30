@@ -9,7 +9,7 @@ export default function UpvoteButton({ count, upvoted, onClick }: Props) {
     <button
       onClick={onClick}
       aria-pressed={upvoted}
-      className={`flex flex-col items-center justify-center rounded-md px-2 py-1 text-sm font-semibold transition-colors ${
+      className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors ${
         upvoted
           ? 'bg-[var(--btn-primary)] text-white'
           : 'bg-[var(--btn-upvote)] text-[var(--btn-upvote-text)]'

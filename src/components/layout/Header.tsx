@@ -10,20 +10,14 @@ export default function Header() {
   const isRoadmapPage = pathname.includes('roadmap');
 
   return (
-    <header className='bg-[var(--bg-header)]'>
+    <header className='w-full bg-[var(--bg-header)]'>
       <LayoutWrapper className='flex items-center justify-between py-6'>
-        {isRoadmapPage ? (
-          <div className='flex flex-col gap-2'>
-            <BackButton />
-            <h1 className='text-white text-xl font-bold tracking-tight'>
-              Roadmap
-            </h1>
-          </div>
-        ) : (
+        <div className='flex flex-col gap-2'>
+          {isRoadmapPage && <BackButton />}
           <h1 className='text-white text-xl font-bold tracking-tight'>
-            Product Feedback App
+            {isRoadmapPage ? 'Roadmap' : 'Product Feedback App'}
           </h1>
-        )}
+        </div>
 
         <div className='flex items-center gap-4'>
           <ThemeToggle />

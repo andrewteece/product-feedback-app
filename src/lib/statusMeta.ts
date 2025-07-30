@@ -2,39 +2,39 @@ import type { Status } from '@/types/feedback';
 
 type StatusMeta = {
   label: string;
-  color: string; // design token (CSS var)
-  bgClass: string; // Tailwind-compatible background class
-  textClass: string; // Tailwind-compatible text class
-  dotClass: string; // Tailwind-compatible bg-* for small dots
+  description: string;
+  color: string;
+  textClass: string;
+  dotClass: string;
 };
 
 export const statusMetaMap: Record<Status, StatusMeta> = {
   suggestion: {
     label: 'Suggestion',
-    color: 'var(--status-planned)',
-    bgClass: 'bg-[var(--status-planned)]/10',
-    textClass: 'text-[var(--text-primary)]',
-    dotClass: 'bg-[var(--status-planned)]',
+    description: '',
+    color: '#F49F85',
+    textClass: 'text-[#F49F85]',
+    dotClass: 'bg-[#F49F85]',
   },
   planned: {
     label: 'Planned',
-    color: 'var(--status-planned)',
-    bgClass: 'bg-[var(--status-planned)]/10',
-    textClass: 'text-[var(--status-planned)]',
-    dotClass: 'bg-[var(--status-planned)]',
+    description: 'Ideas prioritized for research',
+    color: '#F49F85',
+    textClass: 'text-[#F49F85]',
+    dotClass: 'bg-[#F49F85]',
   },
   'in-progress': {
     label: 'In Progress',
-    color: 'var(--status-inprogress)',
-    bgClass: 'bg-[var(--status-inprogress)]/10',
-    textClass: 'text-[var(--status-inprogress)]',
-    dotClass: 'bg-[var(--status-inprogress)]',
+    description: 'Currently being developed',
+    color: '#AD1FEA',
+    textClass: 'text-[#AD1FEA]',
+    dotClass: 'bg-[#AD1FEA]',
   },
   live: {
     label: 'Live',
-    color: 'var(--status-live)',
-    bgClass: 'bg-[var(--status-live)]/10',
-    textClass: 'text-[var(--status-live)]',
-    dotClass: 'bg-[var(--status-live)]',
+    description: 'Released features',
+    color: '#62BCFA',
+    textClass: 'text-[#62BCFA]',
+    dotClass: 'bg-[#62BCFA]',
   },
 };
