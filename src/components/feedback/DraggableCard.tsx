@@ -6,8 +6,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
 import { motion } from 'framer-motion';
-import UpvoteButton from '@/components/ui/UpvoteButton';
-import CategoryBadge from '@/components/ui/CategoryBadge';
+import { UpvoteButton, CategoryBadge } from '@/components/ui';
 
 type Props = {
   feedback: Feedback;

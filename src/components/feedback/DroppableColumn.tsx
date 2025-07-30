@@ -2,7 +2,7 @@
 
 import { Feedback, Status } from '@/types/feedback';
 import { SortableContext } from '@dnd-kit/sortable';
-import DraggableCard from './DraggableCard';
+import { DraggableCard } from '@/components/feedback';
 import { statusMetaMap } from '@/lib/statusMeta';
 
 type Props = {

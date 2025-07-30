@@ -1,7 +1,8 @@
 'use client';
 
 import { useFeedbackStore } from '@/store/feedbackStore';
-import DroppableColumn from '@/components/feedback/DroppableColumn';
+import { DroppableColumn } from '@/components/feedback';
+
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { Status } from '@/types/feedback';
 
