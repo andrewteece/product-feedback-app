@@ -21,6 +21,15 @@
   --border-header: hsl(231, 100%, 97%);
   --border-card: hsl(225, 14%, 89%);
   --badge-bg: hsl(231, 100%, 97%);
+
+  --btn-upvote: hsl(231, 100%, 97%); /* #F2F4FF */
+  --btn-upvote-text: hsl(231, 33%, 34%); /* #3A4374 */
+
+  --tag-bg: hsl(231, 100%, 97%); /* same as badge-bg */
+  --tag-text: hsl(231, 33%, 34%); /* consistent readable text */
+
+  --category-badge-bg: hsl(231, 100%, 97%);
+  --category-badge-text: hsl(226, 14%, 45%);
 }
 
 .dark {
@@ -47,4 +56,13 @@
 
   /* Badges */
   --badge-bg: hsl(230 18% 21%);
+
+  --btn-upvote: hsl(230, 18%, 21%);
+  --btn-upvote-text: hsl(229, 53%, 85%);
+
+  --tag-bg: hsl(230, 18%, 21%);
+  --tag-text: hsl(229, 53%, 85%);
+
+  --category-badge-bg: hsl(230, 18%, 21%);
+  --category-badge-text: hsl(229, 53%, 85%);
 }
