@@ -1,12 +1,12 @@
 import '../styles/globals.css';
 import { Jost } from 'next/font/google';
-
+import Header from '@/components/layout/Header';
 import AppProvider from '@/components/providers/AppProvider';
 
 const jost = Jost({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
-  variable: '--font-jost', // Optional for Tailwind integration
+  variable: '--font-jost',
   display: 'swap',
 });
 
@@ -22,9 +22,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' className='bg-[var(--bg-page)] text-[var(--text-primary)]'>
-      <body className={`${jost.className} min-h-screen`}>
+      <body className={`${jost.className} min-h-screen transition-colors`}>
         <AppProvider>
-          <main className='container mx-auto'>{children}</main>
+          <Header />
+          <main className='mx-auto max-w-[1100px] px-4 py-12'>{children}</main>
         </AppProvider>
       </body>
     </html>

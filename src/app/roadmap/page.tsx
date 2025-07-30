@@ -26,34 +26,36 @@ export default function RoadmapPage() {
   }
 
   return (
-    <main className='mx-auto max-w-[1100px] px-4 py-12'>
-      <h1 className='sr-only'>Roadmap</h1>
+    <>
+      <main className='mx-auto max-w-[1100px] px-4 py-12'>
+        <h1 className='sr-only'>Roadmap</h1>
 
-      <DndContext onDragEnd={onDragEnd}>
-        <div className='grid gap-6 md:grid-cols-3'>
-          <DroppableColumn
-            status='planned'
-            items={planned}
-            title='Planned'
-            subtitle='Ideas prioritized for research'
-            color='text-purple-600'
-          />
-          <DroppableColumn
-            status='in-progress'
-            items={inProgress}
-            title='In-Progress'
-            subtitle='Currently being developed'
-            color='text-orange-500'
-          />
-          <DroppableColumn
-            status='live'
-            items={live}
-            title='Live'
-            subtitle='Released features'
-            color='text-teal-500'
-          />
-        </div>
-      </DndContext>
-    </main>
+        <DndContext onDragEnd={onDragEnd}>
+          <div className='grid gap-6 md:grid-cols-3'>
+            <DroppableColumn
+              status='planned'
+              items={planned}
+              title='Planned'
+              subtitle='Ideas prioritized for research'
+              color='text-purple-600'
+            />
+            <DroppableColumn
+              status='in-progress'
+              items={inProgress}
+              title='In-Progress'
+              subtitle='Currently being developed'
+              color='text-orange-500'
+            />
+            <DroppableColumn
+              status='live'
+              items={live}
+              title='Live'
+              subtitle='Released features'
+              color='text-teal-500'
+            />
+          </div>
+        </DndContext>
+      </main>
+    </>
   );
 }
