@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFeedbackStore } from '@/store/feedbackStore';
-import type { Category } from '@/types/feedback';
+import type { Category, Feedback } from '@/types/feedback';
 import { useRouter } from 'next/navigation';
 import { DEFAULT_STATUS } from '@/types/feedback';
 
@@ -18,7 +18,15 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function FeedbackForm() {
+interface FeedbackFormProps {
+  initialValues?: Feedback;
+  onSubmitSuccess?: () => void;
+}
+
+export default function FeedbackForm({
+  initialValues,
+  onSubmitSuccess,
+}: FeedbackFormProps) {
   const {
     register,
     handleSubmit,
@@ -26,23 +34,42 @@ export default function FeedbackForm() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: initialValues ?? {
+      title: '',
+      category: 'feature',
+      description: '',
+    },
   });
 
   const addFeedback = useFeedbackStore((s) => s.addFeedback);
+  const updateFeedback = useFeedbackStore((s) => s.updateFeedback);
   const router = useRouter();
 
   const onSubmit = (data: FormData) => {
-    const newFeedback = {
-      id: Date.now(),
-      status: DEFAULT_STATUS,
-      upvotes: 0,
-      comments: [],
-      upvoted: false,
-      ...data,
-    };
-    addFeedback(newFeedback);
+    if (initialValues) {
+      const updated: Feedback = {
+        ...initialValues,
+        ...data,
+      };
+      updateFeedback(updated);
+    } else {
+      const newFeedback: Feedback = {
+        id: Date.now(),
+        status: DEFAULT_STATUS,
+        upvotes: 0,
+        upvoted: false,
+        comments: [],
+        ...data,
+      };
+      addFeedback(newFeedback);
+    }
+
     reset();
-    router.push('/');
+    if (onSubmitSuccess) {
+      onSubmitSuccess();
+    } else {
+      router.push('/');
+    }
   };
 
   return (
@@ -107,7 +134,7 @@ export default function FeedbackForm() {
         type='submit'
         className='bg-[var(--btn-primary)] hover:bg-[var(--btn-primary-hover)] text-white px-6 py-2 rounded-md transition'
       >
-        Submit Feedback
+        {initialValues ? 'Update Feedback' : 'Submit Feedback'}
       </button>
     </form>
   );
