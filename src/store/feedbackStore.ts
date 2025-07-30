@@ -18,6 +18,7 @@ interface FeedbackStore {
   toggleUpvote: (id: number) => Promise<void>;
   setSelectedCategory: (category: Category | 'all') => void;
   setSortOption: (option: FeedbackStore['sortOption']) => void;
+  getVisibleFeedback: () => Feedback[]; // ✅ new derived state
 }
 
 export const useFeedbackStore = create<FeedbackStore>((set, get) => ({
@@ -44,7 +45,7 @@ export const useFeedbackStore = create<FeedbackStore>((set, get) => ({
     const current = get().feedback.find((f) => f.id === id);
     if (!current) return;
 
-    // Optimistically update UI
+    // Optimistic UI update
     set((state) => ({
       feedback: state.feedback.map((item) =>
         item.id === id
@@ -57,11 +58,10 @@ export const useFeedbackStore = create<FeedbackStore>((set, get) => ({
       ),
     }));
 
-    // Simulate API call
     const result = await toggleUpvoteMock(id, current.upvoted);
 
     if (!result.success) {
-      // Optionally revert the optimistic update if API fails
+      // Optional rollback
       set((state) => ({
         feedback: state.feedback.map((item) =>
           item.id === id ? current : item
@@ -71,6 +71,35 @@ export const useFeedbackStore = create<FeedbackStore>((set, get) => ({
   },
 
   setSelectedCategory: (category) => set({ selectedCategory: category }),
-
   setSortOption: (option) => set({ sortOption: option }),
+
+  getVisibleFeedback: () => {
+    const { feedback, selectedCategory, sortOption } = get();
+
+    let filtered =
+      selectedCategory === 'all'
+        ? feedback
+        : feedback.filter((f) => f.category === selectedCategory);
+
+    switch (sortOption) {
+      case 'most-upvotes':
+        filtered = [...filtered].sort((a, b) => b.upvotes - a.upvotes);
+        break;
+      case 'least-upvotes':
+        filtered = [...filtered].sort((a, b) => a.upvotes - b.upvotes);
+        break;
+      case 'most-comments':
+        filtered = [...filtered].sort(
+          (a, b) => (b.comments?.length ?? 0) - (a.comments?.length ?? 0)
+        );
+        break;
+      case 'least-comments':
+        filtered = [...filtered].sort(
+          (a, b) => (a.comments?.length ?? 0) - (b.comments?.length ?? 0)
+        );
+        break;
+    }
+
+    return filtered;
+  },
 }));
