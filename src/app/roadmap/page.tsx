@@ -30,10 +30,7 @@ export default function RoadmapPage() {
       <h1 className='sr-only'>Roadmap</h1>
 
       <DndContext onDragEnd={onDragEnd}>
-        <div
-          className='grid gap-6 md:grid-cols-3'
-          style={{ backgroundColor: 'var(--bg-page)' }}
-        >
+        <section className='grid gap-6 md:grid-cols-3'>
           <DroppableColumn
             status='planned'
             items={planned}
@@ -49,7 +46,7 @@ export default function RoadmapPage() {
             items={live}
             subtitle='Released features'
           />
-        </div>
+        </section>
       </DndContext>
     </>
   );

@@ -6,6 +6,8 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
 import { motion } from 'framer-motion';
+import UpvoteButton from '@/components/ui/UpvoteButton';
+import CategoryBadge from '@/components/ui/CategoryBadge';
 
 type Props = {
   feedback: Feedback;
@@ -46,20 +48,15 @@ export default function DraggableCard({ feedback }: Props) {
           </p>
         </div>
 
-        <button
+        <UpvoteButton
+          count={liveFeedback.upvotes}
+          upvoted={upvoted}
           onClick={() => toggleUpvote(liveFeedback.id)}
-          className={`flex flex-col items-center justify-center rounded-md px-2 py-1 text-sm font-semibold ${
-            upvoted
-              ? 'bg-[var(--btn-primary)] text-white'
-              : 'bg-[var(--badge-bg)] text-[var(--text-muted)]'
-          }`}
-        >
-          ▲<span>{liveFeedback.upvotes}</span>
-        </button>
+        />
       </div>
 
       <div className='mt-4 flex items-center justify-between text-sm text-[var(--text-muted)]'>
-        <span className='capitalize'>{liveFeedback.category}</span>
+        <CategoryBadge category={liveFeedback.category} />
 
         <div className='flex items-center gap-2' {...attributes} {...listeners}>
           <GripVertical className='h-4 w-4 opacity-50' />
