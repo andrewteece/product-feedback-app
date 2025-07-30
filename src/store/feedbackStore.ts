@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Feedback, Category, Status } from '@/types/feedback';
 import { loadInitialFeedback } from '@/lib/loadInitialFeedback';
+import { toggleUpvoteMock } from '@/lib/api';
 
 interface FeedbackStore {
   feedback: Feedback[];
@@ -14,12 +15,12 @@ interface FeedbackStore {
   loadFeedback: () => void;
   setFeedback: (items: Feedback[]) => void;
   updateStatus: (id: number, newStatus: Status) => void;
-  toggleUpvote: (id: number) => void;
+  toggleUpvote: (id: number) => Promise<void>;
   setSelectedCategory: (category: Category | 'all') => void;
   setSortOption: (option: FeedbackStore['sortOption']) => void;
 }
 
-export const useFeedbackStore = create<FeedbackStore>((set) => ({
+export const useFeedbackStore = create<FeedbackStore>((set, get) => ({
   feedback: [],
   sortOption: 'most-upvotes',
   selectedCategory: 'all',
@@ -39,7 +40,11 @@ export const useFeedbackStore = create<FeedbackStore>((set) => ({
     }));
   },
 
-  toggleUpvote: (id) => {
+  toggleUpvote: async (id) => {
+    const current = get().feedback.find((f) => f.id === id);
+    if (!current) return;
+
+    // Optimistically update UI
     set((state) => ({
       feedback: state.feedback.map((item) =>
         item.id === id
@@ -51,6 +56,18 @@ export const useFeedbackStore = create<FeedbackStore>((set) => ({
           : item
       ),
     }));
+
+    // Simulate API call
+    const result = await toggleUpvoteMock(id, current.upvoted);
+
+    if (!result.success) {
+      // Optionally revert the optimistic update if API fails
+      set((state) => ({
+        feedback: state.feedback.map((item) =>
+          item.id === id ? current : item
+        ),
+      }));
+    }
   },
 
   setSelectedCategory: (category) => set({ selectedCategory: category }),
