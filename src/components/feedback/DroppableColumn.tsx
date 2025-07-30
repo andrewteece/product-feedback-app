@@ -3,14 +3,19 @@
 import { Feedback, Status } from '@/types/feedback';
 import { SortableContext } from '@dnd-kit/sortable';
 import DraggableCard from './DraggableCard';
-import { cn } from '@/lib/utils';
 
 type Props = {
   status: Status;
   items: Feedback[];
   title: string;
   subtitle: string;
-  color: string;
+};
+
+const statusColors: Record<Status, string> = {
+  suggestion: 'var(--status-planned)',
+  planned: 'var(--status-planned)',
+  'in-progress': 'var(--status-inprogress)',
+  live: 'var(--status-live)',
 };
 
 export default function DroppableColumn({
@@ -18,20 +23,17 @@ export default function DroppableColumn({
   items,
   title,
   subtitle,
-  color,
 }: Props) {
-  console.log('[DroppableColumn] status:', status);
+  const color = statusColors[status];
 
   return (
     <div>
       <div className='mb-6'>
-        <h2 className={cn('text-lg font-bold', color)}>
+        <h2 className='text-lg font-bold' style={{ color }}>
           {title}{' '}
-          <span className='text-zinc-500 dark:text-zinc-400'>
-            ({items.length})
-          </span>
+          <span className='text-[var(--text-muted)]'>({items.length})</span>
         </h2>
-        <p className='text-sm text-zinc-500 dark:text-zinc-400'>{subtitle}</p>
+        <p className='text-sm text-[var(--text-muted)]'>{subtitle}</p>
       </div>
 
       <SortableContext items={items.map((f) => f.id.toString())}>

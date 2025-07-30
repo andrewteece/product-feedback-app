@@ -1,33 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&family=Jost:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 @theme {
-  /* Font */
   --font-sans: 'Jost', sans-serif;
 
-  /* Text */
-  --text-primary: hsl(231 33% 34%);
-  --text-muted: hsl(226 14% 45%);
+  /* Light mode */
+  --bg-page: hsl(231, 100%, 98%);
+  --bg-card: hsl(0, 0%, 100%);
+  --bg-header: hsl(231, 33%, 34%); /* #373F68 */
 
-  /* Backgrounds */
-  --bg-page: hsl(231 100% 98%);
-  --bg-card: hsl(0 0% 100%);
-  --bg-header: hsl(231 33% 34%);
+  --text-primary: hsl(231, 33%, 34%); /* #3A4374 */
+  --text-muted: hsl(226, 14%, 45%); /* #647196 */
 
-  /* Buttons */
-  --btn-primary: hsl(276 100% 72%);
-  --btn-primary-hover: hsl(284 90% 68%);
+  --btn-primary: hsl(276, 100%, 72%); /* #AD1FEA */
+  --btn-primary-hover: hsl(284, 90%, 68%); /* #C75AF6 */
 
-  /* Status Colors */
-  --status-planned: hsl(17 88% 75%);
-  --status-inprogress: hsl(276 100% 72%);
-  --status-live: hsl(204 90% 68%);
+  --status-planned: hsl(17, 88%, 75%); /* #F49F85 */
+  --status-inprogress: hsl(276, 100%, 72%); /* #AD1FEA */
+  --status-live: hsl(204, 90%, 68%); /* #62BCFA */
 
-  /* Borders */
-  --border-header: hsl(231 100% 97%);
-  --border-card: hsl(225 14% 89%);
-
-  /* Badges */
-  --badge-bg: hsl(231 100% 97%);
+  --border-header: hsl(231, 100%, 97%);
+  --border-card: hsl(225, 14%, 89%);
+  --badge-bg: hsl(231, 100%, 97%);
 }
 
 .dark {
