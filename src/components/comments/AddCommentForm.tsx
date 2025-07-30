@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUserStore } from '@/store/userStore';
 import Image from 'next/image';
+import { toast } from 'sonner';
 
 const schema = z.object({
   content: z
@@ -42,6 +43,7 @@ export default function AddCommentForm({ feedbackId }: { feedbackId: number }) {
 
     addComment(feedbackId, newComment);
     reset();
+    toast.success('Comment added!');
   };
 
   return (

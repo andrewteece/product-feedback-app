@@ -3,6 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useFeedbackStore } from '@/store/feedbackStore';
 import FeedbackForm from '@/components/feedback/FeedbackForm';
+import { toast } from 'sonner';
 
 export default function EditFeedbackPage() {
   const params = useParams();
@@ -17,8 +18,10 @@ export default function EditFeedbackPage() {
   }
 
   const handleDelete = () => {
-    if (confirm('Are you sure you want to delete this feedback?')) {
+    const confirmed = confirm('Are you sure you want to delete this feedback?');
+    if (confirmed) {
       deleteFeedback(id);
+      toast.success('Feedback deleted');
       router.push('/');
     }
   };

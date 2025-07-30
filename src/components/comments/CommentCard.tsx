@@ -6,6 +6,7 @@ import type { Comment } from '@/types/feedback';
 import ReplyForm from './ReplyForm';
 import { useUserStore } from '@/store/userStore';
 import { useFeedbackStore } from '@/store/feedbackStore';
+import { toast } from 'sonner';
 
 interface Props {
   comment: Comment;
@@ -27,6 +28,7 @@ export default function CommentCard({ comment, feedbackId }: Props) {
 
     addReply(feedbackId, comment.id, reply);
     setShowReply(false);
+    toast.success('Reply posted!');
   };
 
   return (

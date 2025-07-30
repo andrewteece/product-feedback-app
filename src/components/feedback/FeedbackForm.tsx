@@ -7,6 +7,7 @@ import { useFeedbackStore } from '@/store/feedbackStore';
 import type { Category, Feedback } from '@/types/feedback';
 import { useRouter } from 'next/navigation';
 import { DEFAULT_STATUS } from '@/types/feedback';
+import { toast } from 'sonner';
 
 const categories: Category[] = ['ui', 'ux', 'enhancement', 'bug', 'feature'];
 
@@ -52,6 +53,7 @@ export default function FeedbackForm({
         ...data,
       };
       updateFeedback(updated);
+      toast.success('Feedback updated!');
     } else {
       const newFeedback: Feedback = {
         id: Date.now(),
@@ -62,6 +64,7 @@ export default function FeedbackForm({
         ...data,
       };
       addFeedback(newFeedback);
+      toast.success('Feedback added!');
     }
 
     reset();

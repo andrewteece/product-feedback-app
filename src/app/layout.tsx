@@ -3,6 +3,7 @@ import { Jost } from 'next/font/google';
 import Header from '@/components/layout/Header';
 import AppProvider from '@/components/providers/AppProvider';
 import LayoutWrapper from '@/components/layout/LayoutWrapper';
+import { Toaster } from 'sonner'; // ✅ Already installed
 
 const jost = Jost({
   subsets: ['latin'],
@@ -29,6 +30,13 @@ export default function RootLayout({
           <main className='py-12'>
             <LayoutWrapper>{children}</LayoutWrapper>
           </main>
+          <Toaster
+            richColors
+            position='top-right'
+            duration={3000}
+            closeButton
+            theme='system'
+          />
         </AppProvider>
       </body>
     </html>
