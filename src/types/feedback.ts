@@ -3,6 +3,8 @@ export type Status = 'suggestion' | 'planned' | 'in-progress' | 'live';
 
 export type Category = 'feature' | 'ui' | 'ux' | 'enhancement' | 'bug';
 
+export type FilterableCategory = Category | 'all';
+
 export interface User {
   name: string;
   username: string;

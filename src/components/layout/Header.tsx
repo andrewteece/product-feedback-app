@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle, BackButton } from '@/components/ui';
 import LayoutWrapper from '@/components/layout/LayoutWrapper';
+import { routes } from '@/lib/routes';
 
 export default function Header() {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ export default function Header() {
         <div className='flex items-center gap-4'>
           <ThemeToggle />
           <Link
-            href='/new'
+            href={routes.newFeedback}
             className='rounded-lg bg-[var(--btn-primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--btn-primary-hover)] transition'
           >
             + Add Feedback
