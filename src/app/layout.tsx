@@ -26,7 +26,6 @@ export default function RootLayout({
     <html lang='en' className='bg-[var(--bg-page)] text-[var(--text-primary)]'>
       <body className={`${jost.className} min-h-screen transition-colors`}>
         <AppProvider>
-          <Header />
           <main className='py-12'>
             <LayoutWrapper>{children}</LayoutWrapper>
           </main>
