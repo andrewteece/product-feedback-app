@@ -1,91 +1,38 @@
-// Status types and constants
-export type Status = 'suggestion' | 'planned' | 'in-progress' | 'live';
-
-export type Category = 'feature' | 'ui' | 'ux' | 'enhancement' | 'bug';
-
+export type Category = 'ui' | 'ux' | 'enhancement' | 'bug' | 'feature';
 export type FilterableCategory = Category | 'all';
 
-export interface User {
+export type Status = 'suggestion' | 'planned' | 'in-progress' | 'live';
+
+export type User = {
   name: string;
   username: string;
-  avatarUrl: string;
-}
+  image: string; // ✅ Matches structure from data.json
+};
 
-export interface Reply {
+export type Reply = {
   content: string;
   replyingTo: string;
   user: User;
-}
+};
 
-export interface Comment {
+export type Comment = {
   id: number;
   content: string;
   user: User;
   replies?: Reply[];
-}
+};
 
-export interface Feedback {
+export type Feedback = {
   id: number;
   title: string;
-  description: string;
   category: Category;
-  status: Status;
   upvotes: number;
-  upvoted: boolean;
+  status: Status;
+  description: string;
   comments?: Comment[];
-}
-
-export const STATUS_VALUES: Status[] = [
-  'suggestion',
-  'planned',
-  'in-progress',
-  'live',
-];
-
-export const STATUS_LABELS: Record<Status, string> = {
-  suggestion: 'Suggestion',
-  planned: 'Planned',
-  'in-progress': 'In Progress',
-  live: 'Live',
 };
 
-export const STATUS_COLORS: Record<Status, string> = {
-  suggestion: 'violet',
-  planned: 'pink',
-  'in-progress': 'orange',
-  live: 'teal',
+export type FeedbackData = {
+  currentUser: User;
+  productRequests: Feedback[];
 };
-
-export const DEFAULT_STATUS: Status = 'suggestion';
-
-export const CATEGORY_VALUES: Category[] = [
-  'feature',
-  'ui',
-  'ux',
-  'enhancement',
-  'bug',
-];
-
-export const CATEGORY_LABELS: Record<Category, string> = {
-  feature: 'Feature',
-  ui: 'UI',
-  ux: 'UX',
-  enhancement: 'Enhancement',
-  bug: 'Bug',
-};
-
-export const DEFAULT_CATEGORY: Category = 'feature';
-
-// Sorting options
-export type SortOption =
-  | 'most-upvotes'
-  | 'least-upvotes'
-  | 'most-comments'
-  | 'least-comments';
-
-export const SORT_OPTIONS: SortOption[] = [
-  'most-upvotes',
-  'least-upvotes',
-  'most-comments',
-  'least-comments',
-];

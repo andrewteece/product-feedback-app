@@ -1,13 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useFeedbackStore } from '@/store/feedbackStore';
 import SuggestionList from '@/components/feedback/SuggestionList';
-import CategoryFilter from '@/components/feedback/CategoryFilter';
+import CategoryFilter from '@/components/filters/CategoryFilter';
 import SortDropdown from '@/components/feedback/SortDropdown';
 import { useFeedbackInitializer } from '@/lib/userFeedbackInitializer';
-import type { FilterableCategory } from '@/types/feedback';
 import { routes } from '@/lib/routes';
 
 export default function SuggestionsPage() {
@@ -15,9 +13,8 @@ export default function SuggestionsPage() {
 
   const feedback = useFeedbackStore((s) => s.feedback);
   const toggleUpvote = useFeedbackStore((s) => s.toggleUpvote);
+
   const sort = useFeedbackStore((s) => s.sortOption);
-  const setSort = useFeedbackStore((s) => s.setSortOption);
-  const [category, setCategory] = useState<FilterableCategory>('all');
 
   const suggestionsOnly = feedback.filter((f) => f.status === 'suggestion');
 
@@ -31,7 +28,6 @@ export default function SuggestionsPage() {
             <h2 className='text-md font-bold text-[var(--text-primary)] mb-4'>
               Roadmap
             </h2>
-            {/* Add a roadmap summary or compact view here */}
             <div className='space-y-2 text-sm text-[var(--text-muted)]'>
               <div className='flex justify-between'>
                 <span className='before:inline-block before:w-2 before:h-2 before:rounded-full before:bg-[var(--status-planned)] before:mr-2'>
@@ -77,8 +73,7 @@ export default function SuggestionsPage() {
               </h1>
 
               <div className='flex items-center gap-2 text-sm text-[var(--text-muted)]'>
-                <span className='font-medium'>Sort by:</span>
-                <SortDropdown value={sort} onChange={setSort} />
+                <SortDropdown />
               </div>
             </div>
 
@@ -92,7 +87,7 @@ export default function SuggestionsPage() {
 
           <SuggestionList
             feedback={suggestionsOnly}
-            category={category}
+            category={useFeedbackStore((s) => s.selectedCategory)}
             sort={sort}
             onUpvote={toggleUpvote}
           />

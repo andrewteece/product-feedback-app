@@ -1,6 +1,7 @@
 'use client';
 
-import { ChevronDown } from 'lucide-react'; // Or use your own icon
+import { ChevronDown } from 'lucide-react';
+import { useFeedbackStore } from '@/store/feedbackStore';
 
 export type SortOption =
   | 'most-upvotes'
@@ -8,10 +9,10 @@ export type SortOption =
   | 'most-comments'
   | 'least-comments';
 
-interface SortDropdownProps {
-  value: SortOption;
-  onChange: (value: SortOption) => void;
-}
+type SortDropdownProps = {
+  value?: SortOption;
+  onChange?: (value: SortOption) => void;
+};
 
 const SORT_LABELS: Record<SortOption, string> = {
   'most-upvotes': 'Most Upvotes',
@@ -21,13 +22,20 @@ const SORT_LABELS: Record<SortOption, string> = {
 };
 
 export default function SortDropdown({ value, onChange }: SortDropdownProps) {
+  // Zustand fallback if props are not passed
+  const storeValue = useFeedbackStore((s) => s.sortOption);
+  const storeOnChange = useFeedbackStore((s) => s.setSortOption);
+
+  const current = value ?? storeValue;
+  const set = onChange ?? storeOnChange;
+
   return (
     <div className='relative flex items-center gap-2 text-sm font-medium text-[var(--text-muted)]'>
-      <span className='font-semibold text-[var(--text-muted)]'>Sort by:</span>
+      <span className='font-semibold'>Sort by:</span>
       <select
         id='sort'
-        value={value}
-        onChange={(e) => onChange(e.target.value as SortOption)}
+        value={current}
+        onChange={(e) => set(e.target.value as SortOption)}
         className='appearance-none bg-transparent text-[var(--text-primary)] font-semibold pr-6 cursor-pointer focus:outline-none'
       >
         {Object.entries(SORT_LABELS).map(([key, label]) => (
