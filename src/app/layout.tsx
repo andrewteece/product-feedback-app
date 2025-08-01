@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import { Jost } from 'next/font/google';
-import Header from '@/components/layout/Header';
+
 import AppProvider from '@/components/providers/AppProvider';
 import LayoutWrapper from '@/components/layout/LayoutWrapper';
 import { Toaster } from 'sonner'; // ✅ Already installed

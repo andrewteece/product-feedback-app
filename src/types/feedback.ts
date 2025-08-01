@@ -32,6 +32,7 @@ export type Feedback = {
   status: Status;
   description: string;
   comments?: Comment[];
+  upvoted?: boolean;
 };
 
 export type FeedbackData = {
