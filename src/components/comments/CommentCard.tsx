@@ -16,14 +16,18 @@ interface Props {
 export default function CommentCard({ comment, feedbackId }: Props) {
   const [showReply, setShowReply] = useState(false);
 
-  const user = useUserStore((s) => s.currentUser);
+  const user = useUserStore((s) => s.user)!;
   const addReply = useFeedbackStore((s) => s.addReply);
 
   const handleReplySubmit = (replyText: string) => {
     const reply = {
       content: replyText,
       replyingTo: comment.user.username,
-      user,
+      user: {
+        name: user.name,
+        username: user.username,
+        image: user.image,
+      },
     };
 
     addReply(feedbackId, comment.id, reply);
@@ -36,11 +40,12 @@ export default function CommentCard({ comment, feedbackId }: Props) {
       {/* Top-level comment */}
       <div className='flex gap-4'>
         <Image
-          src={comment.user.avatarUrl}
+          src={comment.user.image}
           alt={comment.user.name}
           width={40}
           height={40}
           className='rounded-full'
+          unoptimized
         />
         <div className='flex-1'>
           <div className='flex justify-between items-start'>
@@ -73,11 +78,12 @@ export default function CommentCard({ comment, feedbackId }: Props) {
               {comment.replies.map((reply, index) => (
                 <li key={index} className='flex gap-4'>
                   <Image
-                    src={reply.user.avatarUrl}
+                    src={reply.user.image}
                     alt={reply.user.name}
                     width={32}
                     height={32}
                     className='rounded-full'
+                    unoptimized
                   />
                   <div>
                     <p className='font-bold text-sm'>{reply.user.name}</p>

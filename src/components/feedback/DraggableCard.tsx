@@ -66,7 +66,7 @@ export default function DraggableCard({ feedback }: Props) {
       <div className='mt-4 flex items-center justify-between'>
         <UpvoteButton
           count={liveFeedback.upvotes}
-          upvoted={upvoted}
+          upvoted={upvoted ?? false}
           onClick={() => toggleUpvote(liveFeedback.id)}
         />
 

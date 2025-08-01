@@ -26,13 +26,13 @@ export default function SuggestionList({
 
   const sorted = [...filtered].sort((a, b) => {
     switch (sort) {
-      case 'Most Upvotes':
+      case 'most-upvotes':
         return b.upvotes - a.upvotes;
-      case 'Least Upvotes':
+      case 'least-upvotes':
         return a.upvotes - b.upvotes;
-      case 'Most Comments':
+      case 'most-comments':
         return (b.comments?.length ?? 0) - (a.comments?.length ?? 0);
-      case 'Least Comments':
+      case 'least-comments':
         return (a.comments?.length ?? 0) - (b.comments?.length ?? 0);
       default:
         return 0;

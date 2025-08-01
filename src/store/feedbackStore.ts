@@ -88,7 +88,7 @@ export const useFeedbackStore = create<FeedbackStore>((set, get) => ({
       ),
     }));
 
-    const result = await toggleUpvoteMock(id, current.upvoted);
+    const result = await toggleUpvoteMock(id, current.upvoted ?? false);
 
     if (!result.success) {
       set((state) => ({

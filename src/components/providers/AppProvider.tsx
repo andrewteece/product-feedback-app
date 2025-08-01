@@ -29,7 +29,6 @@ export default function AppProvider({ children }: AppProviderProps) {
 
     const parsed = FeedbackDataSchema.parse(data);
 
-    // ✅ All structure is already correct thanks to Zod — just extend with `upvoted`
     const normalized = parsed.productRequests.map((f) => ({
       ...f,
       upvoted: false,
@@ -38,7 +37,18 @@ export default function AppProvider({ children }: AppProviderProps) {
       comments:
         f.comments?.map((c) => ({
           ...c,
-          replies: c.replies ?? [],
+          user: {
+            ...c.user,
+            image: c.user.avatarUrl, // ✅ fix for comment user
+          },
+          replies:
+            c.replies?.map((r) => ({
+              ...r,
+              user: {
+                ...r.user,
+                image: r.user.avatarUrl, // ✅ fix for reply user
+              },
+            })) ?? [],
         })) ?? [],
     }));
 

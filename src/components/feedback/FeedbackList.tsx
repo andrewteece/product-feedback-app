@@ -11,7 +11,7 @@ export default function FeedbackList() {
 
   const visibleFeedback = useMemo(() => {
     const filtered =
-      selectedCategory === 'All'
+      selectedCategory === 'all'
         ? feedback
         : feedback.filter((f) => f.category === selectedCategory);
 

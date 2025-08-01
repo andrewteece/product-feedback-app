@@ -17,7 +17,7 @@ function mapUser(user: RawUser): User {
   return {
     name: user.name,
     username: user.username,
-    avatarUrl: user.image, // convert "image" to "avatarUrl"
+    image: user.image,
   };
 }
 
