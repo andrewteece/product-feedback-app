@@ -8,18 +8,20 @@ A full-featured feedback board built with Next.js, Tailwind CSS, and Zustand. Us
 
 ## 🚀 Features
 
-- ✅ View and filter suggestions by category
-- ✅ Sort feedback by upvotes or comment count
-- ✅ Upvote/un-upvote feedback
-- ✅ Add new feedback
-- ✅ Comment on feedback
-- ✅ Reply to comments (with replyingTo tracking)
-- ✅ Drag & drop roadmap to change status (planned, in-progress, live)
-- ✅ Persistent state via Zustand
-- ✅ LocalStorage sync (feedback, upvotes, comments)
-- ✅ Responsive design matching Figma spec
-- ✅ Light & dark mode with Tailwind 4
-- ✅ Accessible and keyboard-navigable UI
+- ✅ View and filter suggestions by category  
+- ✅ Sort feedback by upvotes or comment count  
+- ✅ Upvote/un-upvote feedback  
+- ✅ Add new feedback  
+- ✅ Comment on feedback  
+- ✅ Reply to comments (with replyingTo tracking)  
+- ✅ Drag & drop roadmap to change status (planned, in-progress, live)  
+- ✅ Persistent state via Zustand  
+- ✅ LocalStorage sync (feedback, upvotes, comments)  
+- ✅ Responsive design matching Figma spec  
+- ✅ Light & dark mode with Tailwind 4  
+- ✅ Accessible and keyboard-navigable UI  
+- ✅ Figma-accurate roadmap layout and color tokens  
+- ✅ Unified layout system via LayoutWrapper  
 
 ---
 
@@ -40,56 +42,3 @@ A full-featured feedback board built with Next.js, Tailwind CSS, and Zustand. Us
 
 ## 📁 Project Structure
 
-```
-src/
-  ├── components/
-  │   ├── feedback/
-  │   ├── roadmap/
-  │   └── shared/
-  ├── context/
-  ├── hooks/
-  ├── store/
-  ├── types/
-  ├── utils/
-  └── pages/
-```
-
----
-
-## ✅ Current Status
-
-| Module         | Status         |
-|----------------|----------------|
-| Global state   | ✅ Zustand complete |
-| Feedback board | ✅ Functional |
-| Sorting/filter | ✅ Done       |
-| Comments       | ✅ Nested replies supported |
-| Roadmap        | ✅ Drag-and-drop working |
-| Responsive UI  | ✅ Spec-matching |
-| Styling        | 🛠️ Final polish underway |
-| Tests          | 🚧 Coming soon |
-
----
-
-## 🧠 Next Steps
-
-- [ ] Wire up form validation
-- [ ] Write unit tests with Vitest or Jest
-- [ ] Add animation polish for roadmap
-- [ ] Add toast notifications
-- [ ] Connect to backend (optional)
-
----
-
-## 🧑‍💻 Author
-
-**Andrew Teece**  
-Frontend Developer — React, Next.js, TypeScript  
-[Portfolio](https://andrewteece.com) • [GitHub](https://github.com/andrewteece)
-
----
-
-## 📄 License
-
-This project is open-source for learning purposes.  
-Original design by Frontend Mentor.
