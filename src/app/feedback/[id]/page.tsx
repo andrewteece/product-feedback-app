@@ -47,7 +47,7 @@ export default function FeedbackDetailPage() {
         <div className='mt-4'>
           <UpvoteButton
             count={feedback.upvotes}
-            upvoted={feedback.upvoted}
+            upvoted={feedback.upvoted ?? false}
             onClick={() => toggleUpvote(feedback.id)}
           />
         </div>
