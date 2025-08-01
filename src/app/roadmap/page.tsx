@@ -6,6 +6,7 @@ import { DroppableColumn } from '@/components/feedback';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { Status } from '@/types/feedback';
 import Header from '@/components/layout/Header';
+import LayoutWrapper from '@/components/layout/LayoutWrapper';
 
 export default function RoadmapPage() {
   const feedback = useFeedbackStore((s) => s.feedback);
@@ -32,25 +33,27 @@ export default function RoadmapPage() {
       <Header />
       <h1 className='sr-only'>Roadmap</h1>
 
-      <DndContext onDragEnd={onDragEnd}>
-        <section className='grid gap-6 md:grid-cols-3'>
-          <DroppableColumn
-            status='planned'
-            items={planned}
-            subtitle='Ideas prioritized for research'
-          />
-          <DroppableColumn
-            status='in-progress'
-            items={inProgress}
-            subtitle='Currently being developed'
-          />
-          <DroppableColumn
-            status='live'
-            items={live}
-            subtitle='Released features'
-          />
-        </section>
-      </DndContext>
+      <LayoutWrapper className='py-10'>
+        <DndContext onDragEnd={onDragEnd}>
+          <section className='grid gap-6 md:grid-cols-3'>
+            <DroppableColumn
+              status='planned'
+              items={planned}
+              subtitle='Ideas prioritized for research'
+            />
+            <DroppableColumn
+              status='in-progress'
+              items={inProgress}
+              subtitle='Currently being developed'
+            />
+            <DroppableColumn
+              status='live'
+              items={live}
+              subtitle='Released features'
+            />
+          </section>
+        </DndContext>
+      </LayoutWrapper>
     </>
   );
 }
