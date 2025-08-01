@@ -32,7 +32,10 @@
   --category-badge-text: hsl(226, 14%, 45%);
 
   --btn-upvote-hover: hsl(231, 100%, 94%); /* subtle hover shade */
-  --btn-primary-hover: hsl(284, 90%, 68%); /* vibrant hover for active */
+  --btn-primary-hover: hsl(284, 90%, 68%);
+
+  --bg-header-suggestions: hsl(228, 100%, 66%);
+  --bg-header-roadmap: hsl(231, 33%, 34%); /* vibrant hover for active */
 }
 
 .dark {
@@ -68,4 +71,7 @@
 
   --category-badge-bg: hsl(230, 18%, 21%);
   --category-badge-text: hsl(229, 53%, 85%);
+
+  --bg-header-suggestions: hsl(228, 100%, 66%);
+  --bg-header-roadmap: hsl(231, 33%, 34%);
 }
