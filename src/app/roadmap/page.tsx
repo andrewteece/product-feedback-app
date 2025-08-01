@@ -5,6 +5,7 @@ import { DroppableColumn } from '@/components/feedback';
 
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { Status } from '@/types/feedback';
+import Header from '@/components/layout/Header';
 
 export default function RoadmapPage() {
   const feedback = useFeedbackStore((s) => s.feedback);
@@ -28,6 +29,7 @@ export default function RoadmapPage() {
 
   return (
     <>
+      <Header />
       <h1 className='sr-only'>Roadmap</h1>
 
       <DndContext onDragEnd={onDragEnd}>

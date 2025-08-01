@@ -6,7 +6,7 @@ import { useFeedbackInitializer } from '@/lib/userFeedbackInitializer';
 import CategoryFilter from '@/components/filters/CategoryFilter';
 import SidebarHeaderCard from '@/components/layout/SidebarHeaderCard';
 import RoadmapSummary from '@/components/roadmap/RoadmapSummary';
-import SuggestionsHeader from '@/components/feedback/SuggestionsHeader';
+import Header from '@/components/layout/Header';
 import SuggestionList from '@/components/feedback/SuggestionList';
 
 export default function Home() {
@@ -31,7 +31,7 @@ export default function Home() {
 
         {/* Main content */}
         <section className='space-y-6'>
-          <SuggestionsHeader />
+          <Header />
           <SuggestionList
             feedback={suggestions}
             category={selectedCategory}

@@ -3,10 +3,12 @@ export type FilterableCategory = Category | 'all';
 
 export type Status = 'suggestion' | 'planned' | 'in-progress' | 'live';
 
+export const DEFAULT_STATUS: Status = 'suggestion';
+
 export type User = {
   name: string;
   username: string;
-  image: string; // ✅ Matches structure from data.json
+  image: string;
 };
 
 export type Reply = {

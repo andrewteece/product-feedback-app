@@ -22,31 +22,29 @@ const SORT_LABELS: Record<SortOption, string> = {
 };
 
 export default function SortDropdown({ value, onChange }: SortDropdownProps) {
-  // Zustand fallback if props are not passed
-  const storeValue = useFeedbackStore((s) => s.sortOption);
-  const storeOnChange = useFeedbackStore((s) => s.setSortOption);
+  const fallbackValue = useFeedbackStore((s) => s.sortOption);
+  const fallbackOnChange = useFeedbackStore((s) => s.setSortOption);
 
-  const current = value ?? storeValue;
-  const set = onChange ?? storeOnChange;
+  const current = value ?? fallbackValue;
+  const set = onChange ?? fallbackOnChange;
 
   return (
-    <div className='relative flex items-center gap-2 text-sm font-medium text-[var(--text-muted)]'>
-      <span className='font-semibold'>Sort by:</span>
+    <div className='relative'>
       <select
         id='sort'
         value={current}
         onChange={(e) => set(e.target.value as SortOption)}
-        className='appearance-none bg-transparent text-[var(--text-primary)] font-semibold pr-6 cursor-pointer focus:outline-none'
+        className='appearance-none bg-transparent text-white font-semibold pr-6 cursor-pointer text-sm focus:outline-none'
       >
         {Object.entries(SORT_LABELS).map(([key, label]) => (
-          <option key={key} value={key} className='text-[var(--text-primary)]'>
+          <option key={key} value={key} className='text-black'>
             {label}
           </option>
         ))}
       </select>
       <ChevronDown
         size={16}
-        className='absolute right-1 pointer-events-none text-[var(--text-muted)]'
+        className='absolute right-1 top-1/2 -translate-y-1/2 text-white pointer-events-none'
       />
     </div>
   );
