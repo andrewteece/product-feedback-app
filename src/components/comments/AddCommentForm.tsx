@@ -19,7 +19,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function AddCommentForm({ feedbackId }: { feedbackId: number }) {
   const addComment = useFeedbackStore((s) => s.addComment);
-  const user = useUserStore((s) => s.currentUser);
+  const user = useUserStore((s) => s.user)!;
 
   const {
     register,
@@ -38,7 +38,11 @@ export default function AddCommentForm({ feedbackId }: { feedbackId: number }) {
     const newComment = {
       id: Date.now(),
       content: data.content.trim(),
-      user,
+      user: {
+        name: user.name,
+        username: user.username,
+        image: user.image,
+      },
     };
 
     addComment(feedbackId, newComment);
@@ -52,11 +56,12 @@ export default function AddCommentForm({ feedbackId }: { feedbackId: number }) {
 
       <div className='flex items-start gap-3'>
         <Image
-          src={user.avatarUrl}
+          src={user.image}
           alt={user.username}
           width={40}
           height={40}
           className='rounded-full'
+          unoptimized
         />
         <textarea
           {...register('content')}
